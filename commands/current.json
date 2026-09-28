@@ -1,1 +1,5 @@
-{"id":"cmd-multifly-15-net2-0130","action":"network_events","args":{"contains":"fn=play","limit":10}}
+{
+  "id": "visual-resume-10945-0001",
+  "action": "browser_screenshot",
+  "args": {"path": "commands/latest.jpg", "quality": 55}
+}
