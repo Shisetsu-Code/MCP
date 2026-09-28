@@ -1,6 +1,6 @@
 # Shisetsu Browser MCP
 
-Servidor MCP local para que un cliente MCP controle un navegador persistente mediante Playwright/CDP.
+Servidor de control persistente para navegador mediante Playwright/CDP, con dos transportes: MCP local y un control plane remoto sobre Cloudflare Worker + Durable Object + WSS.
 
 Está pensado para análisis visual y de red de demos web: el navegador permanece abierto entre llamadas, de modo que el cliente puede mirar una captura, hacer clic, inspeccionar tráfico y continuar desde el mismo estado.
 
@@ -133,13 +133,72 @@ network_events(contains="fn=play")
 
 El navegador y la captura de red siguen vivos entre esas llamadas.
 
-## Conexión remota
+## Control remoto Cloudflare
 
-Este proyecto expone Streamable HTTP MCP en `/mcp`. El SDK oficial de MCP v2 soporta este transporte.
+El transporte interactivo preferido ya no es GitHub. El sistema validado usa:
 
-ChatGPT no se conecta directamente a un MCP que sólo existe en `localhost`. Para usar una máquina local con un producto que admita MCP remoto, hay que proporcionar un transporte/túnel compatible. No publiques directamente `8765` o `9222`.
+```
+control client
+→ Cloudflare Worker HTTPS API
+→ Durable Object
+↔ WSS persistente
+→ agente Windows
+→ Playwright/CDP
+→ Chrome
+```
 
-La visibilidad pública/privada de este repositorio no cambia eso: el componente que debe ser alcanzable es el servidor MCP en ejecución, no GitHub.
+Estado validado:
+
+```
+Worker: shisetsu-browser-control
+URL: https://shisetsu-browser-control.braian-n-l.workers.dev
+Agent ID: main
+D1: activo
+R2: activo
+WSS persistente: validado
+browser_status: validado end-to-end
+```
+
+El agente local se inicia con:
+
+```powershell
+$env:CF_CONTROL_URL="https://shisetsu-browser-control.braian-n-l.workers.dev"
+$env:CF_CONTROL_TOKEN="<secret>"
+$env:CF_AGENT_ID="main"
+.\run-cloudflare-agent.ps1
+```
+
+El API local de prueba usa `X-Control-Token` y el cliente `cloudflare_client.py`.
+
+Prueba validada:
+
+```powershell
+py -3.12 .\cloudflare_client.py state
+py -3.12 .\cloudflare_client.py send browser_status --id test-status-1
+py -3.12 .\cloudflare_client.py get test-status-1
+```
+
+El resultado observado fue `status: done` con `connected: true`.
+
+GitHub queda como almacenamiento/versionado de evidencia final, no como bus de control por clic.
+
+### Siguiente paso
+
+Exponer un MCP remoto sobre el mismo Worker para que ChatGPT pueda invocar directamente:
+
+```
+browser_status
+browser_open
+browser_click_relative
+browser_screenshot
+network_clear
+network_wait
+sequence
+```
+
+sin depender del cliente Python manual.
+
+Nunca exponer directamente CDP 9222 ni el MCP local 8765 a Internet.
 
 ## Variables
 
