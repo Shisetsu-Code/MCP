@@ -1,0 +1,41 @@
+name: diagnose
+
+on:
+  push:
+    paths:
+      - '.github/workflows/diagnose.yml'
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Diagnostics
+        shell: bash
+        run: |
+          set +e
+          {
+            echo "== python =="
+            python --version
+            echo "== install =="
+            pip install -e .
+            echo "install_rc=$?"
+            echo "== import mcp =="
+            python -c "import mcp; print(mcp)"
+            echo "mcp_rc=$?"
+            echo "== import server =="
+            python -c "from browser_mcp.server import mcp; print(mcp)"
+            echo "server_rc=$?"
+            echo "== compile =="
+            python -m compileall -q src
+            echo "compile_rc=$?"
+          } > diag.txt 2>&1
+          cat diag.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: diagnostics
+          path: diag.txt
