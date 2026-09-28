@@ -83,6 +83,10 @@ class CommandAgent:
             return await self.browser.open(**args)
         if action == "browser_click":
             return await self.browser.click(**args)
+        if action == "browser_click_relative":
+            return await self.browser.click_relative(**args)
+        if action == "browser_viewport":
+            return await self.browser.viewport()
         if action == "browser_click_text":
             return await self.browser.click_text(**args)
         if action == "browser_type":
