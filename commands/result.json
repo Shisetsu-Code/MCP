@@ -1,8 +1,19 @@
 {
-  "id": "cmd-wait-double-finish-0025",
-  "ok": false,
-  "action": "browser_wait",
-  "error": "RuntimeError: Browser is not started. Call browser_start first.",
-  "started_at": 1790611387.6141086,
-  "finished_at": 1790611387.6141086
+  "id": "cmd-reconnect-0026",
+  "ok": true,
+  "action": "browser_start",
+  "result": {
+    "connected": true,
+    "url": "about:blank",
+    "title": "",
+    "pages": 1,
+    "network_events": 0,
+    "allowed_hosts": [
+      "yggdrasilgaming.com",
+      "staticdemo.yggdrasilgaming.com",
+      "demo.yggdrasilgaming.com"
+    ]
+  },
+  "started_at": 1790611405.965797,
+  "finished_at": 1790611406.8168266
 }
