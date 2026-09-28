@@ -1,8 +1,8 @@
 {
-  "id": "cmd-multifly-up5-select-0098",
+  "id": "cmd-multifly-up5-confirm-0099",
   "action": "browser_click_relative",
   "args": {
-    "rx": 0.7965,
-    "ry": 0.369
+    "rx": 0.5854,
+    "ry": 0.582
   }
 }
