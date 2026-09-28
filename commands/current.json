@@ -1,8 +1,8 @@
 {
-  "id": "cmd-multifly-mainshot-0084",
-  "action": "browser_screenshot",
+  "id": "cmd-multifly-buy-0085",
+  "action": "browser_click_relative",
   "args": {
-    "path": "commands/latest.jpg",
-    "quality": 55
+    "rx": 0.9479,
+    "ry": 0.801
   }
 }
