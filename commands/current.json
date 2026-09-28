@@ -1,7 +1,3 @@
 {
-  "id": "cmd-multifly-up5-mainwait-0095",
-  "action": "browser_wait",
-  "args": {
-    "milliseconds": 1200
-  }
+"id":"cmd-multifly-up5-buy-0096","action":"browser_click_relative","args":{"rx":0.9479,"ry":0.801}
 }
