@@ -1,23 +1,13 @@
 {
-  "id": "cmd-all-select-0075",
+  "id": "cmd-all-shot-0076",
   "ok": true,
-  "action": "browser_click_relative",
+  "action": "browser_screenshot",
   "result": {
-    "clicked_relative": {
-      "rx": 0.3979,
-      "ry": 0.781
-    },
-    "clicked_absolute": {
-      "x": 572.976,
-      "y": 781.0
-    },
-    "viewport": {
-      "width": 1440,
-      "height": 1000,
-      "source": "viewport"
-    },
-    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
+    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
+    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
+    "quality": 55,
+    "bytes": 44671
   },
-  "started_at": 1790612645.0084329,
-  "finished_at": 1790612645.0104315
+  "started_at": 1790612658.2090669,
+  "finished_at": 1790612658.2554321
 }
