@@ -1,1 +1,1 @@
-{"id":"cmd-multifly-15-net-0127","action":"network_events","args":{"contains":"fn=play","limit":10}}
+{"id":"cmd-multifly-15-shot-0128","action":"browser_screenshot","args":{"path":"commands/latest.jpg","quality":55}}
