@@ -151,3 +151,14 @@ La visibilidad pública/privada de este repositorio no cambia eso: el componente
 | `MCP_ENABLE_EVAL` | `0` | habilitar JS |
 | `MCP_MAX_BODY_CHARS` | `250000` | límite de body capturado |
 | `MCP_MAX_NETWORK_EVENTS` | `5000` | buffer de red |
+
+
+## Recovery skill
+
+Para retomar el proyecto en una conversación nueva o después de perder contexto, leer primero:
+
+```
+skills/yggdrasil-endpoint-worker/SKILL.md
+```
+
+Ese archivo contiene la arquitectura del worker, protocolo de comandos, estado actual de los juegos, evidencia verificada y próximos pasos.
