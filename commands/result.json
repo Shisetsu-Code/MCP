@@ -1,12 +1,10 @@
 {
-  "id": "cmd-mystery-open-0039",
+  "id": "cmd-mystery-wait-0040",
   "ok": true,
-  "action": "browser_open",
+  "action": "browser_wait",
   "result": {
-    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js",
-    "title": "3 Piggies of Bank",
-    "status": 200
+    "waited_ms": 7000
   },
-  "started_at": 1790611667.9116158,
-  "finished_at": 1790611668.0315702
+  "started_at": 1790611689.512832,
+  "finished_at": 1790611696.5208848
 }
