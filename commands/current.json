@@ -1,1 +1,7 @@
-{"id":"cmd-multifly-up10-net-0118","action":"network_events","args":{"contains":"fn=play","limit":10}}
+{
+  "id": "cmd-multifly-15-open-0119",
+  "action": "browser_open",
+  "args": {
+    "url": "https://staticdemo.yggdrasilgaming.com/10894/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10894&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
+  }
+}
