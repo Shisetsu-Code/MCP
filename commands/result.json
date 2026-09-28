@@ -1,13 +1,10 @@
 {
-  "id": "cmd-shot-buy-0019",
+  "id": "cmd-net-clear-0020",
   "ok": true,
-  "action": "browser_screenshot",
+  "action": "network_clear",
   "result": {
-    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
-    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
-    "quality": 55,
-    "bytes": 97529
+    "cleared": 76
   },
-  "started_at": 1790610890.4886796,
-  "finished_at": 1790610890.584964
+  "started_at": 1790610913.6434898,
+  "finished_at": 1790610913.6434898
 }
