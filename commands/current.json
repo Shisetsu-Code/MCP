@@ -1,8 +1,8 @@
 {
-  "id": "cmd-random-select-0054",
+  "id": "cmd-random-confirm-0055",
   "action": "browser_click",
   "args": {
-    "x": 1147,
-    "y": 578
+    "x": 781,
+    "y": 540
   }
 }
