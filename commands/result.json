@@ -1,10 +1,13 @@
 {
-  "id": "cmd-multifly-15-net-0127",
+  "id": "cmd-multifly-15-shot-0128",
   "ok": true,
-  "action": "network_events",
+  "action": "browser_screenshot",
   "result": {
-    "events": []
+    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
+    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
+    "quality": 55,
+    "bytes": 45241
   },
-  "started_at": 1790613925.1000457,
-  "finished_at": 1790613925.1000457
+  "started_at": 1790613956.3746707,
+  "finished_at": 1790613957.5246177
 }
