@@ -1,7 +1,8 @@
 {
-  "id": "cmd-mystery-wait-0040",
-  "action": "browser_wait",
+  "id": "cmd-mystery-start-0041",
+  "action": "browser_click",
   "args": {
-    "milliseconds": 7000
+    "x": 724,
+    "y": 786
   }
 }
