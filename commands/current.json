@@ -1,8 +1,8 @@
 {
-  "id": "cmd-multifly-up5-confirm-0099",
-  "action": "browser_click_relative",
+  "id": "cmd-multifly-up5-net-0100",
+  "action": "network_events",
   "args": {
-    "rx": 0.5854,
-    "ry": 0.582
+    "contains": "fn=play",
+    "limit": 10
   }
 }
