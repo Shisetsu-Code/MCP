@@ -1,3 +1,5 @@
 {
-"id":"cmd-multifly-up5-buy-0096","action":"browser_click_relative","args":{"rx":0.9479,"ry":0.801}
+  "id": "cmd-multifly-up5-clear-0097",
+  "action": "network_clear",
+  "args": {}
 }
