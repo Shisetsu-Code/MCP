@@ -1,10 +1,14 @@
 {
-  "id": "cmd-clear-collect-0032",
+  "id": "cmd-collect-select-0033",
   "ok": true,
-  "action": "network_clear",
+  "action": "browser_click",
   "result": {
-    "cleared": 76
+    "clicked": {
+      "x": 1147,
+      "y": 374
+    },
+    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790611519.2312117,
-  "finished_at": 1790611519.2322087
+  "started_at": 1790611538.9899251,
+  "finished_at": 1790611538.992427
 }
