@@ -1,14 +1,14 @@
 {
-  "id": "cmd-mystery-select-0045",
+  "id": "cmd-mystery-confirm-0046",
   "ok": true,
   "action": "browser_click",
   "result": {
     "clicked": {
-      "x": 573,
-      "y": 578
+      "x": 781,
+      "y": 540
     },
     "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790611783.9879048,
-  "finished_at": 1790611783.9902434
+  "started_at": 1790611802.4541855,
+  "finished_at": 1790611802.4839733
 }
