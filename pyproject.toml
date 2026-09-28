@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "shisetsu-browser-mcp"
+version = "0.1.0"
+description = "Persistent local browser control MCP for visual interaction and network capture"
+requires-python = ">=3.12"
+dependencies = [
+  "mcp[cli]>=2,<3",
+  "playwright>=1.55,<2",
+]
+
+[project.scripts]
+shisetsu-browser-mcp = "browser_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/browser_mcp"]
