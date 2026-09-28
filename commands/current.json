@@ -1,7 +1,5 @@
 {
-  "id": "cmd-random-main-rel-0063",
-  "action": "browser_wait",
-  "args": {
-    "milliseconds": 1800
-  }
+  "id":"cmd-random-buy-rel-0064",
+  "action":"browser_click_relative",
+  "args":{"rx":0.9479,"ry":0.801}
 }
