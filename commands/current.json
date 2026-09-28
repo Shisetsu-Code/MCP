@@ -1,1 +1,1 @@
-{"id":"cmd-multifly-up10-mainwait-0113","action":"browser_wait","args":{"milliseconds":1200}}
+{"id":"cmd-multifly-up10-buy-0114","action":"browser_click_relative","args":{"rx":0.9479,"ry":0.801}}
