@@ -145,7 +145,7 @@ class CloudflareBrowserAgent:
         )
 
         uri = ws_url(self.base_url, self.agent_id)
-        headers = {"Authorization": f"Bearer {self.token}"}
+        headers = {"X-Control-Token": self.token}
 
         print(f"Connecting agent {self.agent_id!r} to {uri}")
 
