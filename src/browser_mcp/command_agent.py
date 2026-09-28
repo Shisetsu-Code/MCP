@@ -43,7 +43,7 @@ class CommandAgent:
             return
 
         self._git("add", str(RESULT_FILE))
-        latest = Path("commands/latest.png")
+        latest = Path("commands/latest.jpg")
         if latest.exists():
             self._git("add", str(latest))
         latest_b64 = Path("commands/latest.b64")
@@ -100,13 +100,15 @@ class CommandAgent:
         if action == "network_events":
             return {"events": await self.browser.network_events(**args)}
         if action == "browser_screenshot":
-            path = Path(args.get("path", "commands/latest.png"))
+            path = Path(args.get("path", "commands/latest.jpg"))
             path.parent.mkdir(parents=True, exist_ok=True)
-            png = await self.browser.screenshot()
-            path.write_bytes(png)
+            quality = int(args.get("quality", 55))
+            quality = max(20, min(quality, 90))
+            jpg = await self.browser.require_page().screenshot(type="jpeg", quality=quality, full_page=False)
+            path.write_bytes(jpg)
             b64_path = Path("commands/latest.b64")
-            b64_path.write_text(base64.b64encode(png).decode("ascii"), encoding="ascii")
-            return {"path": str(path.resolve()), "base64_path": str(b64_path.resolve())}
+            b64_path.write_text(base64.b64encode(jpg).decode("ascii"), encoding="ascii")
+            return {"path": str(path.resolve()), "base64_path": str(b64_path.resolve()), "quality": quality, "bytes": len(jpg)}
 
         raise ValueError(f"Unsupported action: {action!r}")
 
