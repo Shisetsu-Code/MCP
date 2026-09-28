@@ -24,3 +24,16 @@ jobs:
           curl -sS -o /tmp/out -w '%{http_code}' http://127.0.0.1:8765/mcp || true
           kill $PID || true
           cat /tmp/mcp.log
+
+  cloudflare:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cloudflare
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install
+      - run: npx wrangler deploy --dry-run
