@@ -1,7 +1,1 @@
-{
-  "id": "cmd-multifly-up10-open-0110",
-  "action": "browser_open",
-  "args": {
-    "url": "https://staticdemo.yggdrasilgaming.com/10894/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10894&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
-  }
-}
+{"id":"cmd-multifly-up10-wait-0111","action":"browser_wait","args":{"milliseconds":4000}}
