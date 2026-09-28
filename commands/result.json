@@ -1,19 +1,12 @@
 {
-  "id": "cmd-reconnect-0026",
+  "id": "cmd-open-piggies-0027",
   "ok": true,
-  "action": "browser_start",
+  "action": "browser_open",
   "result": {
-    "connected": true,
-    "url": "about:blank",
-    "title": "",
-    "pages": 1,
-    "network_events": 0,
-    "allowed_hosts": [
-      "yggdrasilgaming.com",
-      "staticdemo.yggdrasilgaming.com",
-      "demo.yggdrasilgaming.com"
-    ]
+    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js",
+    "title": "3 Piggies of Bank",
+    "status": 200
   },
-  "started_at": 1790611405.965797,
-  "finished_at": 1790611406.8168266
+  "started_at": 1790611426.571998,
+  "finished_at": 1790611428.047173
 }
