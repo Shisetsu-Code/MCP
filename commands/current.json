@@ -1,1 +1,1 @@
-{"id":"cmd-multifly-15-shot-0128","action":"browser_screenshot","args":{"path":"commands/latest.jpg","quality":55}}
+{"id":"cmd-multifly-15-confirm2-0129","action":"browser_click_relative","args":{"rx":0.5424,"ry":0.54}}
