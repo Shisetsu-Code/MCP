@@ -1,15 +1,15 @@
 {
-  "id": "cmd-random-select-rel-0066",
+  "id": "cmd-random-confirm-rel-0067",
   "ok": true,
   "action": "browser_click_relative",
   "result": {
     "clicked_relative": {
-      "rx": 0.7965,
-      "ry": 0.578
+      "rx": 0.5854,
+      "ry": 0.582
     },
     "clicked_absolute": {
-      "x": 1146.96,
-      "y": 578.0
+      "x": 842.976,
+      "y": 582.0
     },
     "viewport": {
       "width": 1440,
@@ -18,6 +18,6 @@
     },
     "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790612462.7317512,
-  "finished_at": 1790612462.733754
+  "started_at": 1790612477.7686408,
+  "finished_at": 1790612477.8137133
 }
