@@ -1,7 +1,9 @@
 {
-  "id": "cmd-wait-double-finish-0025",
-  "action": "browser_wait",
+  "id": "cmd-reconnect-0026",
+  "action": "browser_start",
   "args": {
-    "milliseconds": 5000
+    "cdp_url": "http://127.0.0.1:9222",
+    "launch_if_unavailable": true,
+    "headless": false
   }
 }
