@@ -1,8 +1,7 @@
 {
-  "id": "cmd-double-net-0024",
-  "action": "network_events",
+  "id": "cmd-wait-double-finish-0025",
+  "action": "browser_wait",
   "args": {
-    "contains": "fn=play",
-    "limit": 20
+    "milliseconds": 5000
   }
 }
