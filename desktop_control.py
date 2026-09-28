@@ -8,7 +8,7 @@ import threading
 import time
 import tkinter as tk
 from pathlib import Path
-from tkinter import messagebox, ttk
+from tkinter import messagebox, simpledialog, ttk
 
 ROOT = Path(__file__).resolve().parent
 VENV = ROOT / ".venv"
@@ -57,6 +57,34 @@ def user_env(name: str) -> str:
 def ensure_repo_update():
     LOG_QUEUE.put("Updating repository...")
     run(["git", "pull", "--ff-only", "origin", "main"], check=False)
+
+
+def git_tree_hash(path: str) -> str:
+    p = run(["git", "rev-parse", f"HEAD:{path}"], check=False)
+    return p.stdout.strip() if p.returncode == 0 else ""
+
+
+def ensure_cloudflare_deployed():
+    cf = ROOT / "cloudflare"
+    if not cf.exists():
+        return
+
+    tree_hash = git_tree_hash("cloudflare")
+    stamp = ROOT / ".cloudflare-deployed"
+    previous = stamp.read_text(encoding="utf-8").strip() if stamp.exists() else ""
+    if tree_hash and tree_hash == previous:
+        LOG_QUEUE.put("Cloudflare Worker already matches repository.")
+        return
+
+    LOG_QUEUE.put("Cloudflare code changed; deploying Worker automatically...")
+    run(["npm", "install", "--silent"], cwd=cf)
+    deploy = run(["npx", "wrangler", "deploy"], cwd=cf, check=False)
+    if deploy.returncode != 0:
+        raise RuntimeError("Cloudflare deploy failed. Wrangler login may be required once.")
+
+    if tree_hash:
+        stamp.write_text(tree_hash, encoding="utf-8")
+    LOG_QUEUE.put("Cloudflare Worker deployed.")
 
 
 def ensure_venv():
@@ -149,16 +177,26 @@ class ControlApp(tk.Tk):
             ensure_venv()
             start_chrome()
 
+            ensure_cloudflare_deployed()
+
             url = user_env("CF_CONTROL_URL")
             token = user_env("CF_CONTROL_TOKEN")
             agent_id = user_env("CF_AGENT_ID") or "main"
 
-            if not url or not token:
-                self.status_var.set("Configuration required")
-                LOG_QUEUE.put("Cloudflare configuration is missing.")
-                LOG_QUEUE.put("Run setup-cloudflare-env.ps1 once, then restart this launcher.")
-                return
+            if not url:
+                url = "https://shisetsu-browser-control.braian-n-l.workers.dev"
+                self.set_user_env("CF_CONTROL_URL", url)
 
+            if not token:
+                token = self.ask_secret(
+                    "Cloudflare token",
+                    "Paste CONTROL_TOKEN once. It will be saved in your Windows user environment.",
+                )
+                if not token:
+                    raise RuntimeError("Cloudflare token is required.")
+                self.set_user_env("CF_CONTROL_TOKEN", token)
+
+            self.set_user_env("CF_AGENT_ID", agent_id)
             os.environ["CF_CONTROL_URL"] = url
             os.environ["CF_CONTROL_TOKEN"] = token
             os.environ["CF_AGENT_ID"] = agent_id
@@ -167,6 +205,30 @@ class ControlApp(tk.Tk):
         except Exception as exc:
             self.status_var.set("Error")
             LOG_QUEUE.put(f"ERROR: {type(exc).__name__}: {exc}")
+
+
+    def ask_secret(self, title: str, prompt: str) -> str:
+        done = threading.Event()
+        result = {"value": ""}
+
+        def _ask():
+            result["value"] = simpledialog.askstring(title, prompt, show="*", parent=self) or ""
+            done.set()
+
+        self.after(0, _ask)
+        done.wait()
+        return result["value"].strip()
+
+    def set_user_env(self, name: str, value: str):
+        subprocess.run(
+            ["powershell", "-NoProfile", "-Command",
+             f"[Environment]::SetEnvironmentVariable('{name}', $env:MCP_GUI_VALUE, 'User')"],
+            env={**os.environ, "MCP_GUI_VALUE": value},
+            text=True,
+            capture_output=True,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
+        )
+        os.environ[name] = value
 
     def start_agent(self):
         env = os.environ.copy()
