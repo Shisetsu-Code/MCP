@@ -189,10 +189,33 @@ class BrowserController:
         await self.page.bring_to_front()
         return await self.status()
 
+    async def viewport(self) -> dict[str, Any]:
+        page = self.require_page()
+        size = page.viewport_size
+        if size:
+            return {"width": size["width"], "height": size["height"], "source": "viewport"}
+        dims = await page.evaluate("() => ({width: window.innerWidth, height: window.innerHeight})")
+        return {"width": int(dims["width"]), "height": int(dims["height"]), "source": "window"}
+
     async def click(self, x: float, y: float) -> dict[str, Any]:
         page = self.require_page()
         await page.mouse.click(x, y)
         return {"clicked": {"x": x, "y": y}, "url": page.url}
+
+    async def click_relative(self, rx: float, ry: float) -> dict[str, Any]:
+        if not (0 <= rx <= 1 and 0 <= ry <= 1):
+            raise ValueError("rx and ry must be between 0 and 1")
+        page = self.require_page()
+        vp = await self.viewport()
+        x = vp["width"] * rx
+        y = vp["height"] * ry
+        await page.mouse.click(x, y)
+        return {
+            "clicked_relative": {"rx": rx, "ry": ry},
+            "clicked_absolute": {"x": x, "y": y},
+            "viewport": vp,
+            "url": page.url,
+        }
 
     async def click_text(self, text: str, exact: bool = False) -> dict[str, Any]:
         page = self.require_page()
