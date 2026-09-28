@@ -1,10 +1,14 @@
 {
-  "id": "cmd-random-mainwait-0051",
+  "id": "cmd-random-buyopen-0052",
   "ok": true,
-  "action": "browser_wait",
+  "action": "browser_click",
   "result": {
-    "waited_ms": 1800
+    "clicked": {
+      "x": 1365,
+      "y": 801
+    },
+    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790611889.9137774,
-  "finished_at": 1790611891.7249286
+  "started_at": 1790611907.7804878,
+  "finished_at": 1790611907.7824867
 }
