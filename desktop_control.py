@@ -10,7 +10,43 @@ import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox, simpledialog, ttk
 
-ROOT = Path(__file__).resolve().parent
+def find_repo_root() -> Path:
+    candidates: list[Path] = []
+
+    # Normal Python execution.
+    candidates.append(Path(__file__).resolve().parent)
+
+    # PyInstaller --onefile: sys.executable points to the real EXE location,
+    # while __file__ points inside the temporary _MEI extraction directory.
+    if getattr(sys, "frozen", False):
+        candidates.append(Path(sys.executable).resolve().parent)
+
+    # Current working directory and common user clone location.
+    candidates.append(Path.cwd())
+    candidates.append(Path.home() / "MCP")
+
+    # Also inspect parents in case the EXE is placed in dist/ or another child.
+    expanded: list[Path] = []
+    for candidate in candidates:
+        expanded.append(candidate)
+        expanded.extend(candidate.parents)
+
+    seen: set[str] = set()
+    for candidate in expanded:
+        key = str(candidate).lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        if (candidate / ".git").exists() and (candidate / "pyproject.toml").exists():
+            return candidate
+
+    raise RuntimeError(
+        "Could not locate the MCP repository. Put MCP-Control.exe inside the cloned "
+        "MCP repository or keep it at C:\\Users\\<user>\\MCP."
+    )
+
+
+ROOT = find_repo_root()
 VENV = ROOT / ".venv"
 PY = VENV / "Scripts" / "python.exe"
 PIP = VENV / "Scripts" / "pip.exe"
