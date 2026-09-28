@@ -493,3 +493,46 @@ Shisetsu-Code/Endpoints relevant observed.json files
 ```
 
 Then continue from the first pending verified action.
+
+
+## Cloudflare realtime transport
+
+Preferred transport once deployed:
+
+```
+control client
+→ Cloudflare Worker HTTPS API
+→ Durable Object
+↔ persistent WSS
+→ local CloudflareBrowserAgent
+→ Playwright/CDP
+→ Chrome
+```
+
+Cloudflare files live under:
+
+```
+cloudflare/
+```
+
+Windows agent:
+
+```
+run-cloudflare-agent.ps1
+```
+
+Python agent module:
+
+```
+src/browser_mcp/cloudflare_agent.py
+```
+
+D1 stores command state, results, events, and agent state. R2 stores JPEG screenshots.
+
+Use GitHub only for final evidence once Cloudflare transport is active.
+
+For deployment and environment setup, read:
+
+```
+cloudflare/README.md
+```
