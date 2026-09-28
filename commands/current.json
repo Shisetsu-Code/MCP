@@ -1,7 +1,5 @@
 {
-  "id": "cmd-all-mainwait-0072",
-  "action": "browser_wait",
-  "args": {
-    "milliseconds": 1800
-  }
+  "id":"cmd-all-buy-0073",
+  "action":"browser_click_relative",
+  "args":{"rx":0.9479,"ry":0.801}
 }
