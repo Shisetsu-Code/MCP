@@ -1,10 +1,13 @@
 {
-  "id": "cmd-random-net-0056",
+  "id": "cmd-random-shot-0057",
   "ok": true,
-  "action": "network_events",
+  "action": "browser_screenshot",
   "result": {
-    "events": []
+    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
+    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
+    "quality": 55,
+    "bytes": 44633
   },
-  "started_at": 1790611965.566832,
-  "finished_at": 1790611965.566832
+  "started_at": 1790611983.2085664,
+  "finished_at": 1790611983.2718735
 }
