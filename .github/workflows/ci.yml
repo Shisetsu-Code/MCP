@@ -1,0 +1,26 @@
+name: ci
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -e .
+      - run: python -m playwright install chromium
+      - name: Import server
+        run: python -c "from browser_mcp.server import mcp; print(mcp)"
+      - name: Start and probe MCP
+        run: |
+          python -m browser_mcp.server > /tmp/mcp.log 2>&1 &
+          PID=$!
+          sleep 4
+          curl -sS -o /tmp/out -w '%{http_code}' http://127.0.0.1:8765/mcp || true
+          kill $PID || true
+          cat /tmp/mcp.log
