@@ -1,10 +1,8 @@
 {
-  "id": "cmd-net-0004",
-  "ok": true,
-  "action": "network_events",
-  "result": {
-    "events": []
-  },
-  "started_at": 1790608612.3126755,
-  "finished_at": 1790608612.3126755
+  "id": "cmd-shot-0005",
+  "ok": false,
+  "action": "browser_screenshot",
+  "error": "RuntimeError: Browser is not started. Call browser_start first.",
+  "started_at": 1790608635.5424232,
+  "finished_at": 1790608635.543423
 }
