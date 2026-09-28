@@ -1,5 +1,8 @@
 {
-  "id": "cmd-all-clear-0074",
-  "action": "network_clear",
-  "args": {}
+  "id": "cmd-all-select-0075",
+  "action": "browser_click_relative",
+  "args": {
+    "rx": 0.3979,
+    "ry": 0.781
+  }
 }
