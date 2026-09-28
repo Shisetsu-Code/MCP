@@ -1,8 +1,7 @@
 {
-  "id": "cmd-net-0004",
-  "action": "network_events",
+  "id": "cmd-shot-0005",
+  "action": "browser_screenshot",
   "args": {
-    "contains": "game.web/service",
-    "limit": 40
+    "path": "commands/latest.png"
   }
 }
