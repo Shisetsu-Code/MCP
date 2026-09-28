@@ -1,10 +1,8 @@
 {
-  "id": "cmd-double-net-0024",
-  "ok": true,
-  "action": "network_events",
-  "result": {
-    "events": []
-  },
-  "started_at": 1790611195.9857419,
-  "finished_at": 1790611195.9857419
+  "id": "cmd-wait-double-finish-0025",
+  "ok": false,
+  "action": "browser_wait",
+  "error": "RuntimeError: Browser is not started. Call browser_start first.",
+  "started_at": 1790611387.6141086,
+  "finished_at": 1790611387.6141086
 }
