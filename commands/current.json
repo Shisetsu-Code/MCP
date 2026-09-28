@@ -1,5 +1,5 @@
 {
-  "id": "cmd-shot-buy-0019",
-  "action": "browser_screenshot",
-  "args": {"path": "commands/latest.jpg", "quality": 55}
+  "id": "cmd-net-clear-0020",
+  "action": "network_clear",
+  "args": {}
 }
