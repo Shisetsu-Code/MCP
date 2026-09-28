@@ -1,8 +1,8 @@
 {
-  "id": "cmd-random-select-rel-0066",
+  "id": "cmd-random-confirm-rel-0067",
   "action": "browser_click_relative",
   "args": {
-    "rx": 0.7965,
-    "ry": 0.578
+    "rx": 0.5854,
+    "ry": 0.582
   }
 }
