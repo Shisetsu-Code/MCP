@@ -1,12 +1,10 @@
 {
-  "id": "cmd-random-open-0048",
+  "id": "cmd-random-wait-0049",
   "ok": true,
-  "action": "browser_open",
+  "action": "browser_wait",
   "result": {
-    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js",
-    "title": "3 Piggies of Bank",
-    "status": 200
+    "waited_ms": 7000
   },
-  "started_at": 1790611836.0953403,
-  "finished_at": 1790611836.2100153
+  "started_at": 1790611852.2940037,
+  "finished_at": 1790611859.3001852
 }
