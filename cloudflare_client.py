@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import urllib.request
+import urllib.error
 
 
 def api(path: str, method: str = "GET", body: dict | None = None):
@@ -17,10 +18,22 @@ def api(path: str, method: str = "GET", body: dict | None = None):
         headers={
             "X-Control-Token": token,
             "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 Shisetsu-Control/1.0",
+            "Accept": "application/json",
         },
     )
-    with urllib.request.urlopen(req, timeout=35) as response:
-        return json.loads(response.read().decode("utf-8"))
+    try:
+        with urllib.request.urlopen(req, timeout=35) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"HTTP {exc.code} {exc.reason}\n"
+            f"URL: {exc.url}\n"
+            f"Server: {exc.headers.get('server')}\n"
+            f"CF-Ray: {exc.headers.get('cf-ray')}\n"
+            f"Body: {body}"
+        ) from None
 
 
 def main():
