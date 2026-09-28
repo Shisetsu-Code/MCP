@@ -1,8 +1,8 @@
 {
-  "id": "cmd-mystery-confirm-0046",
-  "action": "browser_click",
+  "id": "cmd-mystery-net-0047",
+  "action": "network_events",
   "args": {
-    "x": 781,
-    "y": 540
+    "contains": "fn=play",
+    "limit": 10
   }
 }
