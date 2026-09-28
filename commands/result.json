@@ -1,10 +1,23 @@
 {
-  "id": "cmd-multifly-10-mainwait-0104",
+  "id": "cmd-multifly-10-buy-0105",
   "ok": true,
-  "action": "browser_wait",
+  "action": "browser_click_relative",
   "result": {
-    "waited_ms": 1200
+    "clicked_relative": {
+      "rx": 0.9479,
+      "ry": 0.801
+    },
+    "clicked_absolute": {
+      "x": 1364.9759999999999,
+      "y": 801.0
+    },
+    "viewport": {
+      "width": 1440,
+      "height": 1000,
+      "source": "viewport"
+    },
+    "url": "https://staticdemo.yggdrasilgaming.com/10894/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10894&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790613484.4628701,
-  "finished_at": 1790613485.670379
+  "started_at": 1790613499.7772305,
+  "finished_at": 1790613499.780233
 }
