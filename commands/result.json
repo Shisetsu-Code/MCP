@@ -1,10 +1,8 @@
 {
   "id": "cmd-shot-0007",
-  "ok": true,
+  "ok": false,
   "action": "browser_screenshot",
-  "result": {
-    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.png"
-  },
-  "started_at": 1790608669.8027406,
-  "finished_at": 1790608670.1592247
+  "error": "RuntimeError: Browser is not started. Call browser_start first.",
+  "started_at": 1790608840.513029,
+  "finished_at": 1790608840.513029
 }
