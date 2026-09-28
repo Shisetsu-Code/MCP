@@ -1,7 +1,8 @@
 {
-  "id": "cmd-wait-piggies-0028",
-  "action": "browser_wait",
+  "id": "cmd-start-piggies-0029",
+  "action": "browser_click",
   "args": {
-    "milliseconds": 7000
+    "x": 724,
+    "y": 786
   }
 }
