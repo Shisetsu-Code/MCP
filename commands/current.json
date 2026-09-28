@@ -1,5 +1,8 @@
 {
-  "id": "cmd-mystery-clear-0044",
-  "action": "network_clear",
-  "args": {}
+  "id": "cmd-mystery-select-0045",
+  "action": "browser_click",
+  "args": {
+    "x": 573,
+    "y": 578
+  }
 }
