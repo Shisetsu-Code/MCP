@@ -1,8 +1,5 @@
 {
-  "id": "cmd-multifly-5fs-select-0088",
-  "action": "browser_click_relative",
-  "args": {
-    "rx": 0.3979,
-    "ry": 0.369
-  }
+  "id":"cmd-multifly-5fs-shot-0089",
+  "action":"browser_screenshot",
+  "args":{"path":"commands/latest.jpg","quality":55}
 }
