@@ -289,12 +289,14 @@ export default {
       return json({ ok: true, service: "shisetsu-browser-control" });
     }
 
-    if (!isAuthorized(request, env)) {
-      return json({ ok: false, error: "unauthorized" }, 401);
-    }
-
+    // ChatGPT custom plugin connects to /mcp with "No authentication".
+    // Keep only the MCP surface public; REST control and WSS remain token-protected.
     if (url.pathname.startsWith("/mcp")) {
       return createMcpHandler(() => createBrowserMcpServer(env))(request, env, ctx);
+    }
+
+    if (!isAuthorized(request, env)) {
+      return json({ ok: false, error: "unauthorized" }, 401);
     }
 
     if (url.pathname === "/ws") {
