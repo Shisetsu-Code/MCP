@@ -1,10 +1,23 @@
 $ErrorActionPreference = "Stop"
 
 if (-not $env:CF_CONTROL_URL) {
-    throw "CF_CONTROL_URL is not set."
+    $env:CF_CONTROL_URL = [Environment]::GetEnvironmentVariable("CF_CONTROL_URL", "User")
 }
 if (-not $env:CF_CONTROL_TOKEN) {
-    throw "CF_CONTROL_TOKEN is not set."
+    $env:CF_CONTROL_TOKEN = [Environment]::GetEnvironmentVariable("CF_CONTROL_TOKEN", "User")
+}
+if (-not $env:CF_AGENT_ID) {
+    $env:CF_AGENT_ID = [Environment]::GetEnvironmentVariable("CF_AGENT_ID", "User")
+}
+
+if (-not $env:CF_CONTROL_URL) {
+    throw "CF_CONTROL_URL is not set. Run .\setup-cloudflare-env.ps1 once."
+}
+if (-not $env:CF_CONTROL_TOKEN) {
+    throw "CF_CONTROL_TOKEN is not set. Run .\setup-cloudflare-env.ps1 once."
+}
+if (-not $env:CF_AGENT_ID) {
+    $env:CF_AGENT_ID = "main"
 }
 
 $runtime = "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
