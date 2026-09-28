@@ -1,19 +1,19 @@
 {
-  "id": "cmd-browser-start-0001",
+  "id": "cmd-status-0002",
   "ok": true,
-  "action": "browser_start",
+  "action": "browser_status",
   "result": {
     "connected": true,
     "url": "chrome://intro/",
     "title": "",
     "pages": 1,
-    "network_events": 0,
+    "network_events": 6,
     "allowed_hosts": [
       "yggdrasilgaming.com",
       "staticdemo.yggdrasilgaming.com",
       "demo.yggdrasilgaming.com"
     ]
   },
-  "started_at": 1790608395.660909,
-  "finished_at": 1790608396.0394723
+  "started_at": 1790608410.7704918,
+  "finished_at": 1790608410.7730038
 }
