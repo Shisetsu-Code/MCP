@@ -1,13 +1,14 @@
 {
-  "id": "cmd-shot-0017",
+  "id": "cmd-click-buy-0018",
   "ok": true,
-  "action": "browser_screenshot",
+  "action": "browser_click",
   "result": {
-    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
-    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
-    "quality": 55,
-    "bytes": 165929
+    "clicked": {
+      "x": 1365,
+      "y": 801
+    },
+    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790610848.5548627,
-  "finished_at": 1790610848.6532123
+  "started_at": 1790610868.8229434,
+  "finished_at": 1790610868.8294814
 }
