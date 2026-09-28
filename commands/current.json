@@ -1,8 +1,8 @@
 {
-  "id": "cmd-all-shot-0076",
-  "action": "browser_screenshot",
+  "id": "cmd-all-confirm-0077",
+  "action": "browser_click_relative",
   "args": {
-    "path": "commands/latest.jpg",
-    "quality": 55
+    "rx": 0.5854,
+    "ry": 0.582
   }
 }
