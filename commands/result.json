@@ -1,5 +1,19 @@
 {
-  "id": null,
-  "ok": false,
-  "status": "agent-not-started"
+  "id": "bootstrap-0001",
+  "ok": true,
+  "action": "browser_status",
+  "result": {
+    "connected": false,
+    "url": null,
+    "title": null,
+    "pages": 0,
+    "network_events": 0,
+    "allowed_hosts": [
+      "yggdrasilgaming.com",
+      "staticdemo.yggdrasilgaming.com",
+      "demo.yggdrasilgaming.com"
+    ]
+  },
+  "started_at": 1790608355.854376,
+  "finished_at": 1790608355.854376
 }
