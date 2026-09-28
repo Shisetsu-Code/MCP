@@ -1,5 +1,9 @@
 {
-  "id": "bootstrap-0001",
-  "action": "browser_status",
-  "args": {}
+  "id": "cmd-browser-start-0001",
+  "action": "browser_start",
+  "args": {
+    "cdp_url": "http://127.0.0.1:9222",
+    "launch_if_unavailable": true,
+    "headless": false
+  }
 }
