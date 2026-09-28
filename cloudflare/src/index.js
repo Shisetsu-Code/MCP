@@ -1,4 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
+import { createMcpHandler } from "agents/mcp/server";
+import { McpServer } from "@modelcontextprotocol/server";
+import { z } from "zod";
 
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -14,7 +17,7 @@ function json(data, status = 200, headers = {}) {
 function isAuthorized(request, env) {
   const expected = env.CONTROL_TOKEN;
   if (!expected) return false;
-  return request.headers.get("x-control-token") === expected;
+  return request.headers.get("x-control-token") === expected || request.headers.get("authorization") === `Bearer ${expected}`;
 }
 
 function safeAgentId(value) {
@@ -49,7 +52,7 @@ export default {
       return json({ ok: false, error: "unauthorized" }, 401);
     }
 
-    if (url.pathname === "/ws") {
+    if (url.pathname.startsWith("/mcp")) {\n      return createMcpHandler(() => createBrowserMcpServer(env))(request, env, ctx);\n    }\n\n    if (url.pathname === "/ws") {
       if (request.headers.get("upgrade")?.toLowerCase() !== "websocket") {
         return json({ ok: false, error: "websocket upgrade required" }, 426);
       }
