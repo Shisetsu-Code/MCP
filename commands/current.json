@@ -1,8 +1,8 @@
 {
-  "id": "cmd-collect-confirm2-0037",
-  "action": "browser_click",
+  "id": "cmd-collect-net2-0038",
+  "action": "network_events",
   "args": {
-    "x": 781,
-    "y": 540
+    "contains": "fn=play",
+    "limit": 10
   }
 }
