@@ -1,8 +1,5 @@
 {
-  "id": "cmd-buy-open-0031",
-  "action": "browser_click",
-  "args": {
-    "x": 1365,
-    "y": 801
-  }
+  "id": "cmd-clear-collect-0032",
+  "action": "network_clear",
+  "args": {}
 }
