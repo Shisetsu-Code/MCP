@@ -1,8 +1,8 @@
 {
-  "id": "cmd-double-select-0021",
-  "action": "browser_click",
+  "id": "cmd-double-shot-0022",
+  "action": "browser_screenshot",
   "args": {
-    "x": 573,
-    "y": 374
+    "path": "commands/latest.jpg",
+    "quality": 55
   }
 }
