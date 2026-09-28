@@ -1,5 +1,8 @@
 {
-  "id": "cmd-random-clear-0053",
-  "action": "network_clear",
-  "args": {}
+  "id": "cmd-random-select-0054",
+  "action": "browser_click",
+  "args": {
+    "x": 1147,
+    "y": 578
+  }
 }
