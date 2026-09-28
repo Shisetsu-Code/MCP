@@ -1,8 +1,8 @@
 {
-  "id": "cmd-mystery-select-0045",
+  "id": "cmd-mystery-confirm-0046",
   "action": "browser_click",
   "args": {
-    "x": 573,
-    "y": 578
+    "x": 781,
+    "y": 540
   }
 }
