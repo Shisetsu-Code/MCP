@@ -664,3 +664,39 @@ pending:
 ```
 
 Then persist the complete 10945 evidence to `Shisetsu-Code/Endpoints` and move to the next game in the batch.
+
+
+## Desktop launcher / no-manual-command workflow
+
+Normal operation should no longer require the user to run PowerShell commands.
+
+Primary launcher files:
+
+```
+desktop_control.py
+MCP-Control.cmd
+.github/workflows/build-control-exe.yml
+```
+
+GitHub Actions builds:
+
+```
+MCP-Control.exe
+```
+
+Expected launcher behavior:
+
+1. update the repository with `git pull --ff-only`,
+2. create/update the Python virtualenv,
+3. start or reuse Chrome CDP on `127.0.0.1:9222`,
+4. deploy the Cloudflare Worker automatically only when the `cloudflare/` tree changed,
+5. load saved Windows user environment values,
+6. prompt once for `CONTROL_TOKEN` if it is missing,
+7. start `browser_mcp.cloudflare_agent`,
+8. automatically restart the WSS agent if it exits.
+
+The user should normally only launch `MCP-Control.exe` or double-click `MCP-Control.cmd`.
+
+Do not return to per-game PowerShell debugging unless the launcher itself cannot recover.
+
+The assistant is expected to own provider/game debugging through the control plane and persist verified evidence.
