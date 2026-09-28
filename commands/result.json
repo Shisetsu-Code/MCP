@@ -1,12 +1,12 @@
 {
-  "id": "bootstrap-0001",
+  "id": "cmd-browser-start-0001",
   "ok": true,
-  "action": "browser_status",
+  "action": "browser_start",
   "result": {
-    "connected": false,
-    "url": null,
-    "title": null,
-    "pages": 0,
+    "connected": true,
+    "url": "chrome://intro/",
+    "title": "",
+    "pages": 1,
     "network_events": 0,
     "allowed_hosts": [
       "yggdrasilgaming.com",
@@ -14,6 +14,6 @@
       "demo.yggdrasilgaming.com"
     ]
   },
-  "started_at": 1790608355.854376,
-  "finished_at": 1790608355.854376
+  "started_at": 1790608395.660909,
+  "finished_at": 1790608396.0394723
 }
