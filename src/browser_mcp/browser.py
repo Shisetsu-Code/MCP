@@ -251,6 +251,34 @@ class BrowserController:
         self.network.clear()
         return {"cleared": count}
 
+    async def wait_for_network(
+        self,
+        *,
+        contains: str,
+        kind: str | None = None,
+        timeout_ms: int = 10000,
+        since_index: int | None = None,
+    ) -> list[dict[str, Any]]:
+        deadline = time.time() + max(0, min(timeout_ms, 60000)) / 1000
+        start = len(self.network) if since_index is None else max(0, since_index)
+
+        while time.time() < deadline:
+            if self._response_tasks:
+                await asyncio.gather(*tuple(self._response_tasks), return_exceptions=True)
+
+            events = self.network[start:]
+            needle = contains.lower()
+            matches = [e for e in events if needle in str(e.get("url", "")).lower()]
+            if kind:
+                matches = [e for e in matches if e.get("kind") == kind]
+
+            if matches:
+                return matches
+
+            await asyncio.sleep(0.1)
+
+        return []
+
     async def network_events(
         self,
         *,
