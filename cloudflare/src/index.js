@@ -283,7 +283,7 @@ export class ControlSession extends DurableObject {
     const rows = await this.env.DB.prepare(
       `SELECT id, action, args_json
        FROM commands
-       WHERE agent_id = ? AND status IN ('pending', 'sent')
+       WHERE agent_id = ? AND status = 'pending'
        ORDER BY created_at ASC
        LIMIT 100`
     ).bind(agentId).all();
@@ -330,6 +330,15 @@ export class ControlSession extends DurableObject {
     if (data.type === "state") {
       await this.updateState(agentId, data.state || {}, data);
       await this.addEvent(agentId, "state", data.command_id || null, data);
+      return;
+    }
+
+    if (data.type === "started") {
+      const id = String(data.id || "");
+      await this.env.DB.prepare(
+        "UPDATE commands SET status = 'running', started_at = ? WHERE id = ?"
+      ).bind(data.started_at ?? Date.now() / 1000, id).run();
+      await this.addEvent(agentId, "started", id, data);
       return;
     }
 
