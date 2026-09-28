@@ -1,1 +1,1 @@
-{"id":"cmd-multifly-up10-clear-0115","action":"network_clear","args":{}}
+{"id":"cmd-multifly-up10-select-0116","action":"browser_click_relative","args":{"rx":0.7965,"ry":0.574}}
