@@ -1,8 +1,8 @@
 {
-  "id": "cmd-double-confirm-0023",
-  "action": "browser_click",
+  "id": "cmd-double-net-0024",
+  "action": "network_events",
   "args": {
-    "x": 843,
-    "y": 582
+    "contains": "fn=play",
+    "limit": 20
   }
 }
