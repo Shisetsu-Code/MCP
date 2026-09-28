@@ -1,7 +1,8 @@
 {
-  "id": "cmd-open-ygg-0003",
-  "action": "browser_open",
+  "id": "cmd-net-0004",
+  "action": "network_events",
   "args": {
-    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=us&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
+    "contains": "game.web/service",
+    "limit": 40
   }
 }
