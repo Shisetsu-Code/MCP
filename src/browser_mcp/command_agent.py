@@ -42,6 +42,9 @@ class CommandAgent:
             return
 
         self._git("add", str(RESULT_FILE))
+        latest = Path("commands/latest.png")
+        if latest.exists():
+            self._git("add", str(latest))
         diff = self._git("diff", "--cached", "--quiet")
         if diff.returncode == 0:
             return
