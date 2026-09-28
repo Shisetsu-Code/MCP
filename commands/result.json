@@ -1,15 +1,15 @@
 {
-  "id": "cmd-multifly-up5-select-0098",
+  "id": "cmd-multifly-up5-confirm-0099",
   "ok": true,
   "action": "browser_click_relative",
   "result": {
     "clicked_relative": {
-      "rx": 0.7965,
-      "ry": 0.369
+      "rx": 0.5854,
+      "ry": 0.582
     },
     "clicked_absolute": {
-      "x": 1146.96,
-      "y": 369.0
+      "x": 842.976,
+      "y": 582.0
     },
     "viewport": {
       "width": 1440,
@@ -18,6 +18,6 @@
     },
     "url": "https://staticdemo.yggdrasilgaming.com/10894/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10894&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790613361.0133007,
-  "finished_at": 1790613361.0142999
+  "started_at": 1790613375.9962113,
+  "finished_at": 1790613376.0117295
 }
