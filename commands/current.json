@@ -1,7 +1,1 @@
-{
-  "id": "cmd-multifly-10-wait-0102",
-  "action": "browser_wait",
-  "args": {
-    "milliseconds": 4000
-  }
-}
+{"id":"cmd-multifly-10-cont-0103","action":"browser_click_relative","args":{"rx":0.499,"ry":0.833}}
