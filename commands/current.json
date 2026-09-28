@@ -1,7 +1,8 @@
 {
-  "id": "cmd-multifly-wait-0080",
-  "action": "browser_wait",
+  "id": "cmd-multifly-shot-0081",
+  "action": "browser_screenshot",
   "args": {
-    "milliseconds": 7000
+    "path": "commands/latest.jpg",
+    "quality": 55
   }
 }
