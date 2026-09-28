@@ -1,13 +1,8 @@
 {
-  "id": "cmd-shot-0009",
-  "ok": true,
-  "action": "browser_screenshot",
-  "result": {
-    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
-    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
-    "quality": 55,
-    "bytes": 9262
-  },
-  "started_at": 1790608873.0608385,
-  "finished_at": 1790608873.1027775
+  "id": "cmd-wait-0010",
+  "ok": false,
+  "action": "browser_wait",
+  "error": "RuntimeError: Browser is not started. Call browser_start first.",
+  "started_at": 1790610716.2684677,
+  "finished_at": 1790610716.2684677
 }
