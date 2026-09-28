@@ -1,7 +1,9 @@
 {
-  "id": "cmd-wait-0010",
-  "action": "browser_wait",
+  "id": "cmd-reconnect-0011",
+  "action": "browser_start",
   "args": {
-    "milliseconds": 4000
+    "cdp_url": "http://127.0.0.1:9222",
+    "launch_if_unavailable": true,
+    "headless": false
   }
 }
