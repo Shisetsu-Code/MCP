@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -27,9 +27,26 @@ jobs:
       - name: Build
         run: pyinstaller --noconfirm --clean --onefile --windowed --name MCP-Control desktop_control.py
 
+      - name: Copy executable to repository root
+        shell: pwsh
+        run: Copy-Item -Force dist\MCP-Control.exe .\MCP-Control.exe
+
+      - name: Commit executable
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add MCP-Control.exe
+          if (git diff --cached --quiet) {
+            Write-Host "Executable unchanged"
+            exit 0
+          }
+          git commit -m "Update MCP-Control.exe [skip ci]"
+          git push origin HEAD:main
+
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
           name: MCP-Control-Windows
-          path: dist/MCP-Control.exe
+          path: MCP-Control.exe
           if-no-files-found: error
