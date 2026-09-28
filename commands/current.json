@@ -1,8 +1,8 @@
 {
-  "id": "cmd-random-confirm-0055",
-  "action": "browser_click",
+  "id": "cmd-random-net-0056",
+  "action": "network_events",
   "args": {
-    "x": 781,
-    "y": 540
+    "contains": "fn=play",
+    "limit": 10
   }
 }
