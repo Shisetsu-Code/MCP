@@ -14,7 +14,7 @@ function json(data, status = 200, headers = {}) {
 function isAuthorized(request, env) {
   const expected = env.CONTROL_TOKEN;
   if (!expected) return false;
-  return request.headers.get("authorization") === `Bearer ${expected}`;
+  return request.headers.get("x-control-token") === expected;
 }
 
 function safeAgentId(value) {
