@@ -58,6 +58,18 @@ async def browser_click(x: float, y: float) -> dict[str, Any]:
 
 
 @mcp.tool()
+async def browser_viewport() -> dict[str, Any]:
+    """Return the current viewport size used for coordinate mapping."""
+    return await browser.viewport()
+
+
+@mcp.tool()
+async def browser_click_relative(rx: float, ry: float) -> dict[str, Any]:
+    """Click a position expressed as fractions of the current viewport."""
+    return await browser.click_relative(rx, ry)
+
+
+@mcp.tool()
 async def browser_click_text(text: str, exact: bool = False) -> dict[str, Any]:
     """Click the first visible text match."""
     return await browser.click_text(text, exact=exact)
