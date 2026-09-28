@@ -1,8 +1,7 @@
 {
-  "id": "cmd-click-start-0015",
-  "action": "browser_click",
+  "id": "cmd-wait-after-start-0016",
+  "action": "browser_wait",
   "args": {
-    "x": 724,
-    "y": 786
+    "milliseconds": 2500
   }
 }
