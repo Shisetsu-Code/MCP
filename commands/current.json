@@ -1,7 +1,8 @@
 {
-  "id": "cmd-random-wait-0049",
-  "action": "browser_wait",
+  "id": "cmd-random-start-0050",
+  "action": "browser_click",
   "args": {
-    "milliseconds": 7000
+    "x": 724,
+    "y": 786
   }
 }
