@@ -1,8 +1,8 @@
 {
-  "id": "cmd-collect-net-0035",
-  "action": "network_events",
+  "id": "cmd-collect-shot-0036",
+  "action": "browser_screenshot",
   "args": {
-    "contains": "fn=play",
-    "limit": 10
+    "path": "commands/latest.jpg",
+    "quality": 55
   }
 }
