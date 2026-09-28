@@ -1,19 +1,12 @@
 {
-  "id": "cmd-reconnect-rel-0058",
+  "id": "cmd-vp-0059",
   "ok": true,
-  "action": "browser_start",
+  "action": "browser_viewport",
   "result": {
-    "connected": true,
-    "url": "about:blank",
-    "title": "",
-    "pages": 1,
-    "network_events": 0,
-    "allowed_hosts": [
-      "yggdrasilgaming.com",
-      "staticdemo.yggdrasilgaming.com",
-      "demo.yggdrasilgaming.com"
-    ]
+    "width": 1440,
+    "height": 1000,
+    "source": "viewport"
   },
-  "started_at": 1790612306.91907,
-  "finished_at": 1790612307.7760139
+  "started_at": 1790612322.7510462,
+  "finished_at": 1790612322.7510462
 }
