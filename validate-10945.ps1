@@ -31,7 +31,8 @@ $steps = @(
     @{ action = "browser_click_relative"; args = @{ rx = 0.9479; ry = 0.801 } },
     @{ action = "network_clear"; args = @{} },
     @{ action = "browser_click_relative"; args = @{ rx = 0.7965; ry = 0.578 } },
-    @{ action = "browser_click_relative"; args = @{ rx = 0.5854; ry = 0.582 } },
+    @{ action = "browser_wait"; args = @{ milliseconds = 300 } },
+    @{ action = "browser_click_relative"; args = @{ rx = 0.5424; ry = 0.540 } },
     @{ action = "network_wait"; args = @{ contains = "fn=play"; timeout_ms = 10000 } },
 
     # ALL BANKS
@@ -42,7 +43,8 @@ $steps = @(
     @{ action = "browser_click_relative"; args = @{ rx = 0.9479; ry = 0.801 } },
     @{ action = "network_clear"; args = @{} },
     @{ action = "browser_click_relative"; args = @{ rx = 0.3979; ry = 0.781 } },
-    @{ action = "browser_click_relative"; args = @{ rx = 0.5854; ry = 0.582 } },
+    @{ action = "browser_wait"; args = @{ milliseconds = 300 } },
+    @{ action = "browser_click_relative"; args = @{ rx = 0.5424; ry = 0.540 } },
     @{ action = "network_wait"; args = @{ contains = "fn=play"; timeout_ms = 10000 } }
 )
 
