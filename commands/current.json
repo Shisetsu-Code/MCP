@@ -1,8 +1,8 @@
 {
-  "id": "cmd-collect-select-0033",
+  "id": "cmd-collect-confirm-0034",
   "action": "browser_click",
   "args": {
-    "x": 1147,
-    "y": 374
+    "x": 843,
+    "y": 582
   }
 }
