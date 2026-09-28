@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 import queue
+import shutil
 import subprocess
 import sys
 import threading
@@ -100,6 +101,14 @@ def git_tree_hash(path: str) -> str:
     return p.stdout.strip() if p.returncode == 0 else ""
 
 
+def find_windows_command(*names: str) -> str | None:
+    for name in names:
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
 def ensure_cloudflare_deployed():
     cf = ROOT / "cloudflare"
     if not cf.exists():
@@ -112,15 +121,39 @@ def ensure_cloudflare_deployed():
         LOG_QUEUE.put("Cloudflare Worker already matches repository.")
         return
 
-    LOG_QUEUE.put("Cloudflare code changed; deploying Worker automatically...")
-    run(["npm", "install", "--silent"], cwd=cf)
-    deploy = run(["npx", "wrangler", "deploy"], cwd=cf, check=False)
-    if deploy.returncode != 0:
-        raise RuntimeError("Cloudflare deploy failed. Wrangler login may be required once.")
+    npm = find_windows_command("npm.cmd", "npm")
+    npx = find_windows_command("npx.cmd", "npx")
 
-    if tree_hash:
-        stamp.write_text(tree_hash, encoding="utf-8")
-    LOG_QUEUE.put("Cloudflare Worker deployed.")
+    if not npm or not npx:
+        LOG_QUEUE.put(
+            "Cloudflare deploy skipped: npm/npx not found in PATH. "
+            "The existing deployed Worker will continue to be used."
+        )
+        return
+
+    LOG_QUEUE.put("Cloudflare code changed; deploying Worker automatically...")
+
+    try:
+        install = run([npm, "install", "--silent"], cwd=cf, check=False)
+        if install.returncode != 0:
+            LOG_QUEUE.put("Cloudflare npm install failed; continuing with existing Worker.")
+            return
+
+        deploy = run([npx, "wrangler", "deploy"], cwd=cf, check=False)
+        if deploy.returncode != 0:
+            LOG_QUEUE.put(
+                "Cloudflare deploy failed; continuing with the existing deployed Worker."
+            )
+            return
+
+        if tree_hash:
+            stamp.write_text(tree_hash, encoding="utf-8")
+        LOG_QUEUE.put("Cloudflare Worker deployed.")
+    except Exception as exc:
+        LOG_QUEUE.put(
+            f"Cloudflare deploy warning: {type(exc).__name__}: {exc}. "
+            "Continuing with existing Worker."
+        )
 
 
 def ensure_venv():
