@@ -1,5 +1,8 @@
 {
-  "id": "cmd-net-clear-0020",
-  "action": "network_clear",
-  "args": {}
+  "id": "cmd-double-select-0021",
+  "action": "browser_click",
+  "args": {
+    "x": 573,
+    "y": 374
+  }
 }
