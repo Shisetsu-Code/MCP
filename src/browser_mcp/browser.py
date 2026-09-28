@@ -97,7 +97,7 @@ class BrowserController:
                 "url": request.url,
                 "resource_type": request.resource_type,
                 "post_data": request.post_data,
-                "headers": request.headers,
+                "headers": self._redact_headers(request.headers),
             }
         )
         self._trim_network()
@@ -114,7 +114,7 @@ class BrowserController:
             "method": response.request.method,
             "url": response.url,
             "status": response.status,
-            "headers": response.headers,
+            "headers": self._redact_headers(response.headers),
             "body": None,
         }
         ctype = (response.headers.get("content-type") or "").lower()
@@ -127,6 +127,11 @@ class BrowserController:
 
         self.network.append(item)
         self._trim_network()
+
+    @staticmethod
+    def _redact_headers(headers: dict[str, str]) -> dict[str, str]:
+        sensitive = {"authorization", "cookie", "set-cookie", "proxy-authorization"}
+        return {k: ("<redacted>" if k.lower() in sensitive else v) for k, v in headers.items()}
 
     def _trim_network(self) -> None:
         limit = int(os.getenv("MCP_MAX_NETWORK_EVENTS", "5000"))
