@@ -1,5 +1,8 @@
 {
-  "id": "cmd-random-clear-rel-0065",
-  "action": "network_clear",
-  "args": {}
+  "id": "cmd-random-select-rel-0066",
+  "action": "browser_click_relative",
+  "args": {
+    "rx": 0.7965,
+    "ry": 0.578
+  }
 }
