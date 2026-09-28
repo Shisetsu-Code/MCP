@@ -71,9 +71,7 @@ class CommandAgent:
             self._git("pull", "--rebase", "--autostash", "origin", "main")
             time.sleep(0.4 * (attempt + 1))
 
-    async def execute(self, command: dict[str, Any]) -> dict[str, Any]:
-        action = command.get("action")
-        args = command.get("args") or {}
+    async def execute_action(self, action: str, args: dict[str, Any]) -> Any:
 
         if action == "browser_start":
             return await self.browser.start(**args)
@@ -114,7 +112,51 @@ class CommandAgent:
             b64_path.write_text(base64.b64encode(jpg).decode("ascii"), encoding="ascii")
             return {"path": str(path.resolve()), "base64_path": str(b64_path.resolve()), "quality": quality, "bytes": len(jpg)}
 
+        if action == "network_wait":
+            return {"events": await self.browser.wait_for_network(**args)}
+
         raise ValueError(f"Unsupported action: {action!r}")
+
+    async def execute(self, command: dict[str, Any]) -> dict[str, Any]:
+        action = command.get("action")
+        args = command.get("args") or {}
+
+        if action != "sequence":
+            result = await self.execute_action(action, args)
+            return result if isinstance(result, dict) else {"result": result}
+
+        steps = args.get("steps") or []
+        if not isinstance(steps, list):
+            raise ValueError("sequence.steps must be a list")
+
+        out = []
+        for index, step in enumerate(steps):
+            step_action = step.get("action")
+            step_args = step.get("args") or {}
+            if step_action == "sequence":
+                raise ValueError("nested sequence is not supported")
+            started = time.time()
+            try:
+                result = await self.execute_action(step_action, step_args)
+                out.append({
+                    "index": index,
+                    "action": step_action,
+                    "ok": True,
+                    "result": result,
+                    "elapsed_ms": round((time.time() - started) * 1000, 1),
+                })
+            except Exception as exc:
+                out.append({
+                    "index": index,
+                    "action": step_action,
+                    "ok": False,
+                    "error": f"{type(exc).__name__}: {exc}",
+                    "elapsed_ms": round((time.time() - started) * 1000, 1),
+                })
+                if not step.get("continue_on_error", False):
+                    break
+
+        return {"steps": out}
 
     async def run_forever(self) -> None:
         COMMAND_FILE.parent.mkdir(parents=True, exist_ok=True)
