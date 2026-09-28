@@ -1,10 +1,13 @@
 {
-  "id": "cmd-wait-0013",
+  "id": "cmd-shot-0014",
   "ok": true,
-  "action": "browser_wait",
+  "action": "browser_screenshot",
   "result": {
-    "waited_ms": 7000
+    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
+    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
+    "quality": 55,
+    "bytes": 113260
   },
-  "started_at": 1790610769.3025935,
-  "finished_at": 1790610776.3119867
+  "started_at": 1790610793.9699907,
+  "finished_at": 1790610794.0679138
 }
