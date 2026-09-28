@@ -1,7 +1,8 @@
 {
-  "id": "cmd-mystery-mainwait-0042",
-  "action": "browser_wait",
+  "id": "cmd-mystery-buyopen-0043",
+  "action": "browser_click",
   "args": {
-    "milliseconds": 1800
+    "x": 1365,
+    "y": 801
   }
 }
