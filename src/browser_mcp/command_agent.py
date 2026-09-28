@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 import json
 import os
 import subprocess
@@ -45,6 +46,9 @@ class CommandAgent:
         latest = Path("commands/latest.png")
         if latest.exists():
             self._git("add", str(latest))
+        latest_b64 = Path("commands/latest.b64")
+        if latest_b64.exists():
+            self._git("add", str(latest_b64))
         diff = self._git("diff", "--cached", "--quiet")
         if diff.returncode == 0:
             return
@@ -98,8 +102,11 @@ class CommandAgent:
         if action == "browser_screenshot":
             path = Path(args.get("path", "commands/latest.png"))
             path.parent.mkdir(parents=True, exist_ok=True)
-            path.write_bytes(await self.browser.screenshot())
-            return {"path": str(path.resolve())}
+            png = await self.browser.screenshot()
+            path.write_bytes(png)
+            b64_path = Path("commands/latest.b64")
+            b64_path.write_text(base64.b64encode(png).decode("ascii"), encoding="ascii")
+            return {"path": str(path.resolve()), "base64_path": str(b64_path.resolve())}
 
         raise ValueError(f"Unsupported action: {action!r}")
 
