@@ -55,7 +55,9 @@ def main():
     p.add_argument("action")
     p.add_argument("--agent", default="main")
     p.add_argument("--id", default=None)
-    p.add_argument("--args", default="{}")
+    p.add_argument("--args", default=None)
+    p.add_argument("--args-file", default=None)
+    p.add_argument("--args-stdin", action="store_true")
 
     args = parser.parse_args()
 
@@ -66,10 +68,20 @@ def main():
     elif args.cmd == "get":
         out = api(f"/api/command/{args.id}")
     else:
+        if args.args_file:
+            with open(args.args_file, "r", encoding="utf-8") as fh:
+                parsed_args = json.load(fh)
+        elif args.args_stdin:
+            parsed_args = json.load(__import__("sys").stdin)
+        elif args.args is not None:
+            parsed_args = json.loads(args.args)
+        else:
+            parsed_args = {}
+
         payload = {
             "agent_id": args.agent,
             "action": args.action,
-            "args": json.loads(args.args),
+            "args": parsed_args,
         }
         if args.id:
             payload["id"] = args.id
