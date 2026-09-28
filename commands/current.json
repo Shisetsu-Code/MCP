@@ -1,8 +1,7 @@
 {
-  "id": "cmd-multifly-up5-cont-0094",
-  "action": "browser_click_relative",
+  "id": "cmd-multifly-up5-mainwait-0095",
+  "action": "browser_wait",
   "args": {
-    "rx": 0.499,
-    "ry": 0.833
+    "milliseconds": 1200
   }
 }
