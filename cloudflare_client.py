@@ -69,7 +69,7 @@ def main():
         out = api(f"/api/command/{args.id}")
     else:
         if args.args_file:
-            with open(args.args_file, "r", encoding="utf-8") as fh:
+            with open(args.args_file, "r", encoding="utf-8-sig") as fh:
                 parsed_args = json.load(fh)
         elif args.args_stdin:
             parsed_args = json.load(__import__("sys").stdin)
