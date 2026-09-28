@@ -1,8 +1,19 @@
 {
-  "id": "cmd-wait-0010",
-  "ok": false,
-  "action": "browser_wait",
-  "error": "RuntimeError: Browser is not started. Call browser_start first.",
-  "started_at": 1790610716.2684677,
-  "finished_at": 1790610716.2684677
+  "id": "cmd-reconnect-0011",
+  "ok": true,
+  "action": "browser_start",
+  "result": {
+    "connected": true,
+    "url": "about:blank",
+    "title": "",
+    "pages": 1,
+    "network_events": 0,
+    "allowed_hosts": [
+      "yggdrasilgaming.com",
+      "staticdemo.yggdrasilgaming.com",
+      "demo.yggdrasilgaming.com"
+    ]
+  },
+  "started_at": 1790610737.873565,
+  "finished_at": 1790610738.7032435
 }
