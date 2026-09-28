@@ -1,8 +1,8 @@
 {
-  "id": "cmd-shot-0014",
-  "action": "browser_screenshot",
+  "id": "cmd-click-start-0015",
+  "action": "browser_click",
   "args": {
-    "path": "commands/latest.jpg",
-    "quality": 55
+    "x": 724,
+    "y": 786
   }
 }
