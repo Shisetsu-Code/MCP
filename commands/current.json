@@ -1,7 +1,8 @@
 {
-  "id": "cmd-wait-after-start-0016",
-  "action": "browser_wait",
+  "id": "cmd-shot-0017",
+  "action": "browser_screenshot",
   "args": {
-    "milliseconds": 2500
+    "path": "commands/latest.jpg",
+    "quality": 55
   }
 }
