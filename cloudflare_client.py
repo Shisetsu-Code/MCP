@@ -15,7 +15,7 @@ def api(path: str, method: str = "GET", body: dict | None = None):
         method=method,
         data=data,
         headers={
-            "Authorization": f"Bearer {token}",
+            "X-Control-Token": token,
             "Content-Type": "application/json",
         },
     )
