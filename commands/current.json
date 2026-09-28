@@ -1,8 +1,5 @@
 {
-  "id": "cmd-random-buyopen-0052",
-  "action": "browser_click",
-  "args": {
-    "x": 1365,
-    "y": 801
-  }
+  "id": "cmd-random-clear-0053",
+  "action": "network_clear",
+  "args": {}
 }
