@@ -1,7 +1,8 @@
 {
-  "id": "cmd-random-mainwait-0051",
-  "action": "browser_wait",
+  "id": "cmd-random-buyopen-0052",
+  "action": "browser_click",
   "args": {
-    "milliseconds": 1800
+    "x": 1365,
+    "y": 801
   }
 }
