@@ -1,1 +1,1 @@
-{"id":"cmd-multifly-15-buy-0123","action":"browser_click_relative","args":{"rx":0.9479,"ry":0.801}}
+{"id":"cmd-multifly-15-clear-0124","action":"network_clear","args":{}}
