@@ -21,32 +21,63 @@ Evidence/output repository:
 Shisetsu-Code/Endpoints
 ```
 
-Do not use GitHub Actions for routine click-by-click interaction unless the local command agent is unavailable. The preferred path is the persistent local Chrome controlled through the GitHub command queue.
+Do not use GitHub Actions or the GitHub command queue for routine click-by-click interaction unless Cloudflare is unavailable. The preferred path is the deployed Cloudflare control plane with a persistent WSS connection to the local Windows agent.
 
 ## Architecture
 
-The user's Windows PC runs:
+Preferred validated architecture:
 
 ```
-Chrome visible
-  ↕ CDP on 127.0.0.1:9222
+control client
+  ↓ HTTPS
+Cloudflare Worker
+  ↓
+Durable Object
+  ↕ persistent WSS
+CloudflareBrowserAgent on Windows
+  ↓
 BrowserController / Playwright
-  ↕
-command_agent.py
-  ↕ git pull/push
-Shisetsu-Code/MCP/commands/
-  ↕
-ChatGPT via GitHub connector
+  ↓ CDP 127.0.0.1:9222
+Chrome visible
 ```
 
-The local agent is started with:
+Cloudflare resources:
+
+```
+Worker URL:
+https://shisetsu-browser-control.braian-n-l.workers.dev
+
+Agent ID:
+main
+
+D1:
+commands
+results
+events
+agent_state
+
+R2:
+JPEG screenshots
+```
+
+The WSS path and a complete `browser_status` round trip were validated on 2026-09-28.
+
+Start Chrome if needed:
 
 ```powershell
 .\start-chrome.ps1
-.\run-agent.ps1
 ```
 
-The agent polls approximately every 1.2 seconds.
+Start the preferred agent:
+
+```powershell
+$env:CF_CONTROL_URL="https://shisetsu-browser-control.braian-n-l.workers.dev"
+$env:CF_CONTROL_TOKEN="<secret>"
+$env:CF_AGENT_ID="main"
+.\run-cloudflare-agent.ps1
+```
+
+GitHub command queue remains only as fallback.
 
 ## Command protocol
 
@@ -438,11 +469,37 @@ isFinished=true
 
 The DOUBLE purchase was observed to resolve the bonus sequence in the response and finish with `isFinished=true`.
 
+Additional verified purchases:
+
+### COLLECT
+
+```
+amount=120
+coin=120
+cmd=BB_GREEN
+modeName=BB_BonusGreen
+featureIdentifier=bonusGreen
+isFinished=true
+```
+
+Observed as one complete server-resolved bonus response with no intermediate player choice.
+
+### MYSTERY
+
+```
+amount=150
+coin=150
+cmd=BB_RED
+modeName=BB_BonusRed
+featureIdentifier=bonusRed
+isFinished=true
+```
+
+Observed as one complete server-resolved bonus response with no intermediate player choice.
+
 Still pending on 3 Piggies:
 
 ```
-COLLECT
-MYSTERY
 RANDOM BANK
 ALL BANKS
 ```
@@ -536,3 +593,74 @@ For deployment and environment setup, read:
 ```
 cloudflare/README.md
 ```
+
+
+## Validated Cloudflare control state
+
+A full control round trip has been confirmed:
+
+```
+POST command
+→ status sent
+→ WSS delivery
+→ local execution
+→ status running
+→ status done
+→ result persisted in D1
+```
+
+Validated test command:
+
+```
+browser_status
+```
+
+Observed result:
+
+```
+connected=true
+url=about:blank
+pages=1
+network_events=0
+viewport=1440x1000
+```
+
+Authentication uses:
+
+```
+X-Control-Token: <CONTROL_TOKEN>
+```
+
+Do not use the old Authorization Bearer header.
+
+## Preferred command batching
+
+Use `sequence` whenever multiple browser actions belong to one causal operation.
+
+Example:
+
+```
+network_clear
+→ browser_click_relative
+→ browser_click_relative
+→ network_wait(contains="fn=play")
+```
+
+This executes locally over one WSS command and avoids repeated control-plane round trips.
+
+## Next step after context loss
+
+The next infrastructure task is to expose a remote MCP interface on the Cloudflare Worker itself so ChatGPT can invoke the browser-control operations directly.
+
+Until that exists, `cloudflare_client.py` is the validated control client.
+
+After the MCP surface is implemented, continue Yggdrasil work from:
+
+```
+10945 3 Piggies of Bank
+pending:
+- RANDOM BANK
+- ALL BANKS
+```
+
+Then persist the complete 10945 evidence to `Shisetsu-Code/Endpoints` and move to the next game in the batch.
