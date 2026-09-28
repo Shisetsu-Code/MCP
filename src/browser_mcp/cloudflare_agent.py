@@ -94,6 +94,13 @@ class CloudflareBrowserAgent:
         args = command.get("args") or {}
         started = time.time()
 
+        await self.send_json(ws, {
+            "type": "started",
+            "id": command_id,
+            "action": action,
+            "started_at": started,
+        })
+
         try:
             if not self.command_agent.browser.page or self.command_agent.browser.page.is_closed():
                 await self.command_agent.browser.start(
