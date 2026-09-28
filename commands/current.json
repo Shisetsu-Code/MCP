@@ -1,8 +1,5 @@
 {
-  "id": "cmd-mystery-buyopen-0043",
-  "action": "browser_click",
-  "args": {
-    "x": 1365,
-    "y": 801
-  }
+  "id": "cmd-mystery-clear-0044",
+  "action": "network_clear",
+  "args": {}
 }
