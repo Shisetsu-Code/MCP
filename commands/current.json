@@ -1,7 +1,8 @@
 {
-  "id": "cmd-random-wait-rel-0061",
-  "action": "browser_wait",
+  "id": "cmd-random-start-rel-0062",
+  "action": "browser_click_relative",
   "args": {
-    "milliseconds": 7000
+    "rx": 0.5028,
+    "ry": 0.786
   }
 }
