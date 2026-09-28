@@ -1,7 +1,9 @@
 {
-  "id": "cmd-shot-0005",
-  "action": "browser_screenshot",
+  "id": "cmd-restart-0006",
+  "action": "browser_start",
   "args": {
-    "path": "commands/latest.png"
+    "cdp_url": "http://127.0.0.1:9222",
+    "launch_if_unavailable": true,
+    "headless": false
   }
 }
