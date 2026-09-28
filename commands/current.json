@@ -1,8 +1,8 @@
 {
-  "id": "cmd-random-confirm-rel-0067",
-  "action": "browser_click_relative",
+  "id": "cmd-random-net-rel-0068",
+  "action": "network_events",
   "args": {
-    "rx": 0.5854,
-    "ry": 0.582
+    "contains": "fn=play",
+    "limit": 10
   }
 }
