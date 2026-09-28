@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import subprocess
 import time
 from pathlib import Path
 from typing import Any
@@ -12,13 +13,56 @@ from .browser import BrowserController
 
 COMMAND_FILE = Path(os.getenv("MCP_COMMAND_FILE", "commands/current.json"))
 RESULT_FILE = Path(os.getenv("MCP_RESULT_FILE", "commands/result.json"))
-POLL_MS = int(os.getenv("MCP_COMMAND_POLL_MS", "400"))
+POLL_MS = int(os.getenv("MCP_COMMAND_POLL_MS", "1200"))
+GIT_SYNC = os.getenv("MCP_GIT_SYNC", "1") == "1"
 
 
 class CommandAgent:
     def __init__(self) -> None:
         self.browser = BrowserController()
         self.last_id: str | None = None
+
+    def _git(self, *args: str, check: bool = False) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", *args],
+            text=True,
+            capture_output=True,
+            check=check,
+        )
+
+    def sync_from_remote(self) -> None:
+        if not GIT_SYNC:
+            return
+        proc = self._git("pull", "--rebase", "--autostash", "origin", "main")
+        if proc.returncode != 0:
+            print("git pull:", proc.stderr.strip() or proc.stdout.strip())
+
+    def publish_result(self, command_id: str) -> None:
+        if not GIT_SYNC:
+            return
+
+        self._git("add", str(RESULT_FILE))
+        diff = self._git("diff", "--cached", "--quiet")
+        if diff.returncode == 0:
+            return
+
+        self._git(
+            "-c",
+            "user.name=browser-command-agent",
+            "-c",
+            "user.email=browser-command-agent@localhost",
+            "commit",
+            "-m",
+            f"result: {command_id}",
+        )
+
+        for attempt in range(3):
+            pushed = self._git("push", "origin", "main")
+            if pushed.returncode == 0:
+                return
+            print("git push:", pushed.stderr.strip() or pushed.stdout.strip())
+            self._git("pull", "--rebase", "--autostash", "origin", "main")
+            time.sleep(0.4 * (attempt + 1))
 
     async def execute(self, command: dict[str, Any]) -> dict[str, Any]:
         action = command.get("action")
@@ -61,9 +105,12 @@ class CommandAgent:
         RESULT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
         print(f"Watching {COMMAND_FILE.resolve()} every {POLL_MS} ms")
+        print(f"Git sync: {'enabled' if GIT_SYNC else 'disabled'}")
 
         while True:
             try:
+                self.sync_from_remote()
+
                 if COMMAND_FILE.exists():
                     raw = COMMAND_FILE.read_text(encoding="utf-8").strip()
                     if raw:
@@ -97,6 +144,7 @@ class CommandAgent:
                                 encoding="utf-8",
                             )
                             print(json.dumps(payload, ensure_ascii=False))
+                            self.publish_result(command_id)
             except Exception as exc:
                 print(f"agent loop error: {type(exc).__name__}: {exc}")
 
