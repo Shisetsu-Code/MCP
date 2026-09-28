@@ -260,7 +260,7 @@ class BrowserController:
         since_index: int | None = None,
     ) -> list[dict[str, Any]]:
         deadline = time.time() + max(0, min(timeout_ms, 60000)) / 1000
-        start = len(self.network) if since_index is None else max(0, since_index)
+        # Default to the beginning of the current buffer. Callers that need a\n        # checkpoint can pass since_index explicitly. This avoids missing very fast\n        # requests that arrive between a click and the subsequent network_wait call.\n        start = 0 if since_index is None else max(0, since_index)
 
         while time.time() < deadline:
             if self._response_tasks:
