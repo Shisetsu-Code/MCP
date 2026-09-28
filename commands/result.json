@@ -1,14 +1,10 @@
 {
-  "id": "cmd-click-start-0015",
+  "id": "cmd-wait-after-start-0016",
   "ok": true,
-  "action": "browser_click",
+  "action": "browser_wait",
   "result": {
-    "clicked": {
-      "x": 724,
-      "y": 786
-    },
-    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
+    "waited_ms": 2500
   },
-  "started_at": 1790610813.7914753,
-  "finished_at": 1790610813.796995
+  "started_at": 1790610829.3166776,
+  "finished_at": 1790610831.8217752
 }
