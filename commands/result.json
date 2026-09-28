@@ -1,10 +1,14 @@
 {
-  "id": "cmd-wait-piggies-0028",
+  "id": "cmd-start-piggies-0029",
   "ok": true,
-  "action": "browser_wait",
+  "action": "browser_click",
   "result": {
-    "waited_ms": 7000
+    "clicked": {
+      "x": 724,
+      "y": 786
+    },
+    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js"
   },
-  "started_at": 1790611445.7151537,
-  "finished_at": 1790611452.7304208
+  "started_at": 1790611463.9995914,
+  "finished_at": 1790611464.0046492
 }
