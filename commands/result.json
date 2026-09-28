@@ -1,10 +1,13 @@
 {
-  "id": "cmd-collect-net-0035",
+  "id": "cmd-collect-shot-0036",
   "ok": true,
-  "action": "network_events",
+  "action": "browser_screenshot",
   "result": {
-    "events": []
+    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
+    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
+    "quality": 55,
+    "bytes": 43554
   },
-  "started_at": 1790611567.4890077,
-  "finished_at": 1790611567.4890077
+  "started_at": 1790611587.0573704,
+  "finished_at": 1790611588.3013458
 }
