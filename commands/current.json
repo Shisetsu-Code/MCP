@@ -1,7 +1,8 @@
 {
-  "id": "cmd-wait-0013",
-  "action": "browser_wait",
+  "id": "cmd-shot-0014",
+  "action": "browser_screenshot",
   "args": {
-    "milliseconds": 7000
+    "path": "commands/latest.jpg",
+    "quality": 55
   }
 }
