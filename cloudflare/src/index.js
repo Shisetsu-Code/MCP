@@ -72,6 +72,117 @@ export default {
       }));
     }
 
+    if (url.pathname === "/api/rpc" && request.method === "POST") {
+      let body;
+      try {
+        body = await readJson(request);
+      } catch (error) {
+        return json({ ok: false, error: String(error) }, 400);
+      }
+
+      let agentId;
+      try {
+        agentId = safeAgentId(body.agent_id || "firetrace");
+      } catch (error) {
+        return json({ ok: false, error: String(error) }, 400);
+      }
+
+      const command = {
+        id: String(body.id || crypto.randomUUID()),
+        action: String(body.action || ""),
+        args: body.args && typeof body.args === "object" ? body.args : {},
+      };
+
+      if (!/^[A-Za-z0-9_.:-]{1,128}$/.test(command.id)) {
+        return json({ ok: false, error: "invalid command id" }, 400);
+      }
+      if (!/^[A-Za-z0-9_.:-]{1,128}$/.test(command.action)) {
+        return json({ ok: false, error: "invalid action" }, 400);
+      }
+
+      const waitMs = Math.max(
+        0,
+        Math.min(25000, Number(body.wait_ms ?? 12000) || 12000),
+      );
+
+      try {
+        await env.DB.prepare(
+          `INSERT INTO commands
+           (id, agent_id, action, args_json, status, created_at)
+           VALUES (?, ?, ?, ?, 'pending', ?)`
+        ).bind(
+          command.id,
+          agentId,
+          command.action,
+          JSON.stringify(command.args),
+          nowMs(),
+        ).run();
+      } catch (error) {
+        if (!String(error).toLowerCase().includes("unique")) throw error;
+      }
+
+      const stub = env.CONTROL.get(env.CONTROL.idFromName(agentId));
+      const delivered = await stub.fetch("https://control.internal/command", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(command),
+      });
+      const delivery = await delivered.json();
+
+      if (!delivery.connected) {
+        return json({
+          ok: false,
+          id: command.id,
+          agent_id: agentId,
+          status: "pending",
+          connected: false,
+          error: "agent not connected",
+        }, 503);
+      }
+
+      const deadline = nowMs() + waitMs;
+      while (nowMs() <= deadline) {
+        const row = await env.DB.prepare(
+          "SELECT status, result_json, error, started_at, finished_at FROM commands WHERE id = ?"
+        ).bind(command.id).first();
+
+        if (row?.status === "done") {
+          return json({
+            ok: true,
+            id: command.id,
+            agent_id: agentId,
+            status: "done",
+            result: row.result_json ? JSON.parse(row.result_json) : null,
+            started_at: row.started_at ?? null,
+            finished_at: row.finished_at ?? null,
+          });
+        }
+
+        if (row?.status === "error") {
+          return json({
+            ok: false,
+            id: command.id,
+            agent_id: agentId,
+            status: "error",
+            error: row.error || "command failed",
+            started_at: row.started_at ?? null,
+            finished_at: row.finished_at ?? null,
+          }, 502);
+        }
+
+        if (waitMs === 0) break;
+        await new Promise((resolve) => setTimeout(resolve, 100));
+      }
+
+      return json({
+        ok: true,
+        id: command.id,
+        agent_id: agentId,
+        status: "running",
+        connected: true,
+      }, 202);
+    }
+
     if (url.pathname === "/api/command" && request.method === "POST") {
       let body;
       try {
