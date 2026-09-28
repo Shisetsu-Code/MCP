@@ -1,10 +1,13 @@
 {
-  "id": "cmd-multifly-wait-0080",
+  "id": "cmd-multifly-shot-0081",
   "ok": true,
-  "action": "browser_wait",
+  "action": "browser_screenshot",
   "result": {
-    "waited_ms": 7000
+    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
+    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
+    "quality": 55,
+    "bytes": 125899
   },
-  "started_at": 1790612942.7062902,
-  "finished_at": 1790612949.7157774
+  "started_at": 1790612971.31017,
+  "finished_at": 1790612971.3754623
 }
