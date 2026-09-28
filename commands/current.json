@@ -1,8 +1,5 @@
 {
-  "id": "cmd-click-buy-0018",
-  "action": "browser_click",
-  "args": {
-    "x": 1365,
-    "y": 801
-  }
+  "id": "cmd-shot-buy-0019",
+  "action": "browser_screenshot",
+  "args": {"path": "commands/latest.jpg", "quality": 55}
 }
