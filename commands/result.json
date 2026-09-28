@@ -1,12 +1,10 @@
 {
-  "id": "cmd-multifly-15-open-0119",
+  "id": "cmd-multifly-15-wait-0120",
   "ok": true,
-  "action": "browser_open",
+  "action": "browser_wait",
   "result": {
-    "url": "https://staticdemo.yggdrasilgaming.com/10894/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10894&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js",
-    "title": "Multifly! 2",
-    "status": 200
+    "waited_ms": 4000
   },
-  "started_at": 1790613766.6624565,
-  "finished_at": 1790613766.7621434
+  "started_at": 1790613783.851917,
+  "finished_at": 1790613787.8596108
 }
