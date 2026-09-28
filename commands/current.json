@@ -1,8 +1,8 @@
 {
-  "id": "cmd-collect-shot-0036",
-  "action": "browser_screenshot",
+  "id": "cmd-collect-confirm2-0037",
+  "action": "browser_click",
   "args": {
-    "path": "commands/latest.jpg",
-    "quality": 55
+    "x": 781,
+    "y": 540
   }
 }
