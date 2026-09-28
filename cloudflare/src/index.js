@@ -40,8 +40,249 @@ function nowMs() {
   return Date.now();
 }
 
+
+async function submitCommand(env, action, args = {}, options = {}) {
+  const agentId = safeAgentId(options.agentId || "firetrace");
+  const command = {
+    id: String(options.id || crypto.randomUUID()),
+    action: String(action || ""),
+    args: args && typeof args === "object" ? args : {},
+  };
+
+  if (!/^[A-Za-z0-9_.:-]{1,128}$/.test(command.id)) {
+    throw new Error("invalid command id");
+  }
+  if (!/^[A-Za-z0-9_.:-]{1,128}$/.test(command.action)) {
+    throw new Error("invalid action");
+  }
+
+  const waitMs = Math.max(0, Math.min(25000, Number(options.waitMs ?? 15000) || 15000));
+
+  await env.DB.prepare(
+    `INSERT INTO commands
+     (id, agent_id, action, args_json, status, created_at)
+     VALUES (?, ?, ?, ?, 'pending', ?)`
+  ).bind(
+    command.id,
+    agentId,
+    command.action,
+    JSON.stringify(command.args),
+    nowMs(),
+  ).run();
+
+  const stub = env.CONTROL.get(env.CONTROL.idFromName(agentId));
+  const delivered = await stub.fetch("https://control.internal/command", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(command),
+  });
+  const delivery = await delivered.json();
+
+  if (!delivery.connected) {
+    throw new Error(`agent ${agentId} is not connected`);
+  }
+
+  const deadline = nowMs() + waitMs;
+  while (nowMs() <= deadline) {
+    const row = await env.DB.prepare(
+      "SELECT status, result_json, error, started_at, finished_at FROM commands WHERE id = ?"
+    ).bind(command.id).first();
+
+    if (row?.status === "done") {
+      return {
+        id: command.id,
+        agent_id: agentId,
+        status: "done",
+        result: row.result_json ? JSON.parse(row.result_json) : null,
+        started_at: row.started_at ?? null,
+        finished_at: row.finished_at ?? null,
+      };
+    }
+
+    if (row?.status === "error") {
+      throw new Error(row.error || "command failed");
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+
+  return {
+    id: command.id,
+    agent_id: agentId,
+    status: "running",
+  };
+}
+
+function toolText(value) {
+  return {
+    content: [{
+      type: "text",
+      text: typeof value === "string" ? value : JSON.stringify(value),
+    }],
+    structuredContent: typeof value === "object" && value !== null ? value : undefined,
+  };
+}
+
+function createBrowserMcpServer(env) {
+  const server = new McpServer({
+    name: "Firetrace Browser Control",
+    version: "1.0.0",
+  }, {
+    instructions:
+      "Control the user's Firetrace browser worker. Use screenshot before visual clicks when the current page state is unknown. Prefer sequence for multiple deterministic actions. trigger_and_capture correlates a click with matching network traffic.",
+  });
+
+  server.registerTool(
+    "firetrace_status",
+    {
+      description: "Get the current Firetrace browser status, URL, page count, and viewport.",
+      inputSchema: {},
+    },
+    async () => toolText(await submitCommand(env, "status", {})),
+  );
+
+  server.registerTool(
+    "firetrace_open",
+    {
+      description: "Open a URL in the Firetrace browser.",
+      inputSchema: { url: z.string().url() },
+    },
+    async ({ url }) => toolText(await submitCommand(env, "open", { url }, { waitMs: 25000 })),
+  );
+
+  server.registerTool(
+    "firetrace_click",
+    {
+      description: "Click an absolute pixel coordinate in the current Firetrace browser page.",
+      inputSchema: {
+        x: z.number(),
+        y: z.number(),
+      },
+    },
+    async ({ x, y }) => toolText(await submitCommand(env, "click", { x, y })),
+  );
+
+  server.registerTool(
+    "firetrace_click_relative",
+    {
+      description: "Click a relative page coordinate, where rx and ry range from 0 to 1.",
+      inputSchema: {
+        rx: z.number().min(0).max(1),
+        ry: z.number().min(0).max(1),
+      },
+    },
+    async ({ rx, ry }) => toolText(await submitCommand(env, "click_relative", { rx, ry })),
+  );
+
+  server.registerTool(
+    "firetrace_wait",
+    {
+      description: "Wait in the current browser page for a number of milliseconds.",
+      inputSchema: {
+        ms: z.number().int().min(0).max(30000),
+      },
+    },
+    async ({ ms }) => toolText(await submitCommand(env, "wait", { ms }, { waitMs: Math.min(25000, ms + 5000) })),
+  );
+
+  server.registerTool(
+    "firetrace_screenshot",
+    {
+      description: "Capture the current Firetrace browser viewport and return the JPEG image.",
+      inputSchema: {
+        quality: z.number().int().min(20).max(90).optional(),
+      },
+    },
+    async ({ quality }) => {
+      const command = await submitCommand(
+        env,
+        "screenshot",
+        { quality: quality ?? 70 },
+        { waitMs: 20000 },
+      );
+
+      const row = await env.DB.prepare(
+        "SELECT screenshot_key FROM agent_state WHERE agent_id = ?"
+      ).bind("firetrace").first();
+
+      if (!row?.screenshot_key) return toolText(command);
+
+      const object = await env.SCREENSHOTS.get(row.screenshot_key);
+      if (!object) return toolText(command);
+
+      const bytes = new Uint8Array(await object.arrayBuffer());
+      let binary = "";
+      const chunk = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunk) {
+        binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+      }
+      const data = btoa(binary);
+
+      return {
+        content: [
+          { type: "image", data, mimeType: "image/jpeg" },
+          { type: "text", text: JSON.stringify(command) },
+        ],
+        structuredContent: command,
+      };
+    },
+  );
+
+  server.registerTool(
+    "firetrace_trigger_and_capture",
+    {
+      description:
+        "Perform one click and capture matching browser network request/response traffic with CDP, including request postData and response body.",
+      inputSchema: {
+        url_contains: z.string().default("fn=play"),
+        x: z.number().optional(),
+        y: z.number().optional(),
+        rx: z.number().min(0).max(1).optional(),
+        ry: z.number().min(0).max(1).optional(),
+        wait_ms: z.number().int().min(0).max(15000).default(2500),
+      },
+    },
+    async (args) => toolText(await submitCommand(
+      env,
+      "trigger_and_capture",
+      args,
+      { waitMs: Math.min(25000, (args.wait_ms ?? 2500) + 10000) },
+    )),
+  );
+
+  server.registerTool(
+    "firetrace_sequence",
+    {
+      description:
+        "Execute up to 20 Firetrace browser actions locally in one round trip. Supported step actions: status, open, click, click_relative, wait, screenshot, trigger_and_capture.",
+      inputSchema: {
+        steps: z.array(z.object({
+          action: z.enum([
+            "status",
+            "open",
+            "click",
+            "click_relative",
+            "wait",
+            "screenshot",
+            "trigger_and_capture",
+          ]),
+          args: z.record(z.string(), z.any()).optional(),
+        })).min(1).max(20),
+      },
+    },
+    async ({ steps }) => toolText(await submitCommand(
+      env,
+      "sequence",
+      { steps },
+      { waitMs: 25000 },
+    )),
+  );
+
+  return server;
+}
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
 
     if (url.pathname === "/health") {
@@ -52,7 +293,11 @@ export default {
       return json({ ok: false, error: "unauthorized" }, 401);
     }
 
-    if (url.pathname.startsWith("/mcp")) {\n      return createMcpHandler(() => createBrowserMcpServer(env))(request, env, ctx);\n    }\n\n    if (url.pathname === "/ws") {
+    if (url.pathname.startsWith("/mcp")) {
+      return createMcpHandler(() => createBrowserMcpServer(env))(request, env, ctx);
+    }
+
+    if (url.pathname === "/ws") {
       if (request.headers.get("upgrade")?.toLowerCase() !== "websocket") {
         return json({ ok: false, error: "websocket upgrade required" }, 426);
       }
