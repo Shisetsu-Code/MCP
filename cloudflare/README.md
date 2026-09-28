@@ -106,7 +106,7 @@ The agent keeps one WSS connection open and automatically reconnects.
 All API endpoints except `/health` require:
 
 ```
-Authorization: Bearer <CONTROL_TOKEN>
+X-Control-Token: <CONTROL_TOKEN>
 ```
 
 ### Send a command
@@ -114,7 +114,7 @@ Authorization: Bearer <CONTROL_TOKEN>
 ```http
 POST /api/command
 Content-Type: application/json
-Authorization: Bearer ...
+X-Control-Token: ...
 ```
 
 Example body:
@@ -217,3 +217,70 @@ py -3.12 .\cloudflare_client.py send browser_click_relative --id click-1 --args 
 - Browser navigation still uses the existing domain allowlist.
 - Authorization/cookie headers are redacted from captured browser traffic.
 - Never commit the control token.
+
+
+## Validated deployment
+
+As of 2026-09-28 the control plane has been deployed and tested successfully.
+
+Validated Worker:
+
+```
+https://shisetsu-browser-control.braian-n-l.workers.dev
+```
+
+Validated health check:
+
+```powershell
+Invoke-RestMethod "https://shisetsu-browser-control.braian-n-l.workers.dev/health"
+```
+
+Observed response:
+
+```
+ok=True
+service=shisetsu-browser-control
+```
+
+Validated browser-agent path:
+
+```
+Cloudflare API
+→ Durable Object
+→ persistent WSS
+→ Windows agent
+→ BrowserController
+→ Chrome
+→ result
+→ D1
+```
+
+Validated command lifecycle for `browser_status`:
+
+```
+sent → running → done
+```
+
+Observed result:
+
+```
+connected=true
+url=about:blank
+viewport=1440x1000
+```
+
+The GitHub command queue remains as a fallback only.
+
+## Current auth behavior
+
+The Worker, WSS client, and Python API client use:
+
+```
+X-Control-Token: <CONTROL_TOKEN>
+```
+
+Do not use the older `Authorization: Bearer ...` examples.
+
+## Next development step
+
+Add a remote MCP surface to this same Worker so ChatGPT can call the browser tools directly through Cloudflare. Reuse the same Durable Object / WSS path rather than opening another transport to the Windows machine.
