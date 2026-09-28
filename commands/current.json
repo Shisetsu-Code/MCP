@@ -1,9 +1,5 @@
 {
-  "id": "cmd-reconnect-rel-0058",
-  "action": "browser_start",
-  "args": {
-    "cdp_url": "http://127.0.0.1:9222",
-    "launch_if_unavailable": true,
-    "headless": false
-  }
+  "id": "cmd-vp-0059",
+  "action": "browser_viewport",
+  "args": {}
 }
