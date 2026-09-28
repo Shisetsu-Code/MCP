@@ -1,7 +1,8 @@
 {
-  "id": "cmd-wait-main-0030",
-  "action": "browser_wait",
+  "id": "cmd-buy-open-0031",
+  "action": "browser_click",
   "args": {
-    "milliseconds": 1800
+    "x": 1365,
+    "y": 801
   }
 }
