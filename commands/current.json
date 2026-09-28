@@ -1,8 +1,5 @@
 {
-  "id": "cmd-multifly-menushot-0086",
-  "action": "browser_screenshot",
-  "args": {
-    "path": "commands/latest.jpg",
-    "quality": 55
-  }
+  "id": "cmd-multifly-clear1-0087",
+  "action": "network_clear",
+  "args": {}
 }
