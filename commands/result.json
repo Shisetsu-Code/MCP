@@ -1,8 +1,19 @@
 {
-  "id": "cmd-shot-0005",
-  "ok": false,
-  "action": "browser_screenshot",
-  "error": "RuntimeError: Browser is not started. Call browser_start first.",
-  "started_at": 1790608635.5424232,
-  "finished_at": 1790608635.543423
+  "id": "cmd-restart-0006",
+  "ok": true,
+  "action": "browser_start",
+  "result": {
+    "connected": true,
+    "url": "https://staticdemo.yggdrasilgaming.com/10945/index.html?appsrv=https://demo.yggdrasilgaming.com&boostUrl=/boost/current/boost.js&channel=pc&countryCode=ar&currency=EUR&fullscreen=yes&gameid=10945&key=&lang=en&license=mt&org=Demo&pcUrl=/partnerconnect/current/partnerconnect.js",
+    "title": "3 Piggies of Bank",
+    "pages": 1,
+    "network_events": 0,
+    "allowed_hosts": [
+      "yggdrasilgaming.com",
+      "staticdemo.yggdrasilgaming.com",
+      "demo.yggdrasilgaming.com"
+    ]
+  },
+  "started_at": 1790608650.859231,
+  "finished_at": 1790608651.377983
 }
