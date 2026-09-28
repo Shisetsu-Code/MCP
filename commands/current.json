@@ -1,5 +1,8 @@
 {
-  "id": "cmd-multifly-up5-clear-0097",
-  "action": "network_clear",
-  "args": {}
+  "id": "cmd-multifly-up5-select-0098",
+  "action": "browser_click_relative",
+  "args": {
+    "rx": 0.7965,
+    "ry": 0.369
+  }
 }
