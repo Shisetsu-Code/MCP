@@ -1,13 +1,10 @@
 {
-  "id": "cmd-multifly-menushot-0086",
+  "id": "cmd-multifly-clear1-0087",
   "ok": true,
-  "action": "browser_screenshot",
+  "action": "network_clear",
   "result": {
-    "path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.jpg",
-    "base64_path": "C:\\Users\\Shisetsu\\MCP\\commands\\latest.b64",
-    "quality": 55,
-    "bytes": 108910
+    "cleared": 68
   },
-  "started_at": 1790613073.6538541,
-  "finished_at": 1790613073.728722
+  "started_at": 1790613104.9031925,
+  "finished_at": 1790613104.9031925
 }
