@@ -1,8 +1,8 @@
 {
-  "id": "cmd-random-net-0056",
-  "action": "network_events",
+  "id": "cmd-random-shot-0057",
+  "action": "browser_screenshot",
   "args": {
-    "contains": "fn=play",
-    "limit": 10
+    "path": "commands/latest.jpg",
+    "quality": 55
   }
 }
