@@ -1,7 +1,8 @@
 {
-  "id": "cmd-all-wait-0070",
-  "action": "browser_wait",
+  "id": "cmd-all-start-0071",
+  "action": "browser_click_relative",
   "args": {
-    "milliseconds": 7000
+    "rx": 0.5028,
+    "ry": 0.786
   }
 }
