@@ -186,18 +186,23 @@ class CloudflareBrowserAgent:
                 await asyncio.gather(heartbeat_task, return_exceptions=True)
 
     async def run_forever(self) -> None:
+        bridge = asyncio.create_task(self.command_agent.run_forever())
         delay = 1.0
-        while True:
-            try:
-                await self.session()
-                delay = 1.0
-            except asyncio.CancelledError:
-                raise
-            except Exception as exc:
-                print(f"WSS disconnected: {type(exc).__name__}: {exc}")
-                print(f"Reconnecting in {delay:.1f}s...")
-                await asyncio.sleep(delay)
-                delay = min(delay * 1.7, 15.0)
+        try:
+            while True:
+                try:
+                    await self.session()
+                    delay = 1.0
+                except asyncio.CancelledError:
+                    raise
+                except Exception as exc:
+                    print(f"WSS disconnected: {type(exc).__name__}: {exc}")
+                    print(f"Reconnecting in {delay:.1f}s...")
+                    await asyncio.sleep(delay)
+                    delay = min(delay * 1.7, 15.0)
+        finally:
+            bridge.cancel()
+            await asyncio.gather(bridge, return_exceptions=True)
 
 
 def main() -> None:
