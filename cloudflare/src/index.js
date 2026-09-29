@@ -749,6 +749,7 @@ export class ControlSession extends DurableObject {
         id,
       ).run();
       await this.addEvent(agentId, "result", id, data);
+      ws.send(JSON.stringify({type:'result_ack',id}));
       return;
     }
 
