@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "tail": "wrangler tail"
+    "tail": "wrangler tail",
+    "pretest": "wrangler deploy --dry-run --outdir .wrangler/test",
+    "test": "node --test"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

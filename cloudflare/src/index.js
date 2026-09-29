@@ -2,6 +2,7 @@ import { DurableObject } from "cloudflare:workers";
 import { createMcpHandler } from "agents/mcp/server";
 import { McpServer } from "@modelcontextprotocol/server";
 import { z } from "zod";
+import {pollDelay,waitBudget} from './polling.js';
 
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -56,7 +57,7 @@ async function submitCommand(env, action, args = {}, options = {}) {
     throw new Error("invalid action");
   }
 
-  const waitMs = Math.max(0, Math.min(25000, Number(options.waitMs ?? 15000) || 15000));
+  const waitMs = waitBudget(options.waitMs,15000);
 
   await env.DB.prepare(
     `INSERT INTO commands
@@ -83,6 +84,7 @@ async function submitCommand(env, action, args = {}, options = {}) {
   }
 
   const deadline = nowMs() + waitMs;
+  let pollAttempt = 0;
   while (nowMs() <= deadline) {
     const row = await env.DB.prepare(
       "SELECT status, result_json, error, started_at, finished_at FROM commands WHERE id = ?"
@@ -103,7 +105,8 @@ async function submitCommand(env, action, args = {}, options = {}) {
       throw new Error(row.error || "command failed");
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    if (waitMs === 0) break;
+    await new Promise((resolve) => setTimeout(resolve, pollDelay(pollAttempt++, deadline-nowMs())));
   }
 
   return {
@@ -347,21 +350,19 @@ export default {
         return json({ ok: false, error: "invalid action" }, 400);
       }
 
-      const waitMs = Math.max(
-        0,
-        Math.min(25000, Number(body.wait_ms ?? 12000) || 12000),
-      );
+      const waitMs = waitBudget(body.wait_ms,12000);
 
       try {
         await env.DB.prepare(
           `INSERT INTO commands
            (id, agent_id, action, args_json, status, created_at)
-           VALUES (?, ?, ?, ?, 'pending', ?)`
+           VALUES (?, ?, ?, ?, ?, ?)`
         ).bind(
           command.id,
           agentId,
           command.action,
           JSON.stringify(command.args),
+          body.require_online === true ? 'dispatching' : 'pending',
           nowMs(),
         ).run();
       } catch (error) {
@@ -377,6 +378,9 @@ export default {
       const delivery = await delivered.json();
 
       if (!delivery.connected) {
+        if (body.require_online === true) {
+          await env.DB.prepare("UPDATE commands SET status = 'error', error = 'agent not connected', finished_at = ? WHERE id = ? AND status = 'dispatching'").bind(Date.now() / 1000, command.id).run();
+        }
         return json({
           ok: false,
           id: command.id,
@@ -388,6 +392,7 @@ export default {
       }
 
       const deadline = nowMs() + waitMs;
+      let pollAttempt = 0;
       while (nowMs() <= deadline) {
         const row = await env.DB.prepare(
           "SELECT status, result_json, error, started_at, finished_at FROM commands WHERE id = ?"
@@ -418,7 +423,7 @@ export default {
         }
 
         if (waitMs === 0) break;
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, pollDelay(pollAttempt++, deadline-nowMs())));
       }
 
       return json({
@@ -553,12 +558,15 @@ export default {
       const row = await env.DB.prepare(
         "SELECT * FROM agent_state WHERE agent_id = ?"
       ).bind(agentId).first();
+      const stub = env.CONTROL.get(env.CONTROL.idFromName(agentId));
+      const presence = await (await stub.fetch('https://control.internal/presence')).json();
 
       return json({
         ok: true,
         state: row ? {
           ...row,
-          connected: Boolean(row.connected),
+          connected: presence.connected,
+          last_seen: presence.last_seen || row.last_seen,
           meta: JSON.parse(row.meta_json || "{}"),
         } : null,
       });
@@ -600,39 +608,61 @@ export class ControlSession extends DurableObject {
     super(ctx, env);
     this.ctx = ctx;
     this.env = env;
+    this.ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('firetrace:ping', 'firetrace:pong'));
+  }
+
+  liveSockets() {
+    return this.ctx.getWebSockets().filter(socket => {
+      if(socket.readyState !== 1) return false;
+      const info = socket.deserializeAttachment() || {};
+      if(!info.optimized) return true;
+      const seen = Math.max(info.last_seen || 0, this.ctx.getWebSocketAutoResponseTimestamp(socket)?.getTime() || 0);
+      return Date.now() - seen < 90000;
+    });
   }
 
   async fetch(request) {
     const url = new URL(request.url);
+
+    if(url.pathname === '/presence') {
+      const sockets = this.liveSockets();
+      const lastSeen = sockets.map(socket => {
+        const info=socket.deserializeAttachment() || {};
+        return Math.max(info.last_seen || 0, this.ctx.getWebSocketAutoResponseTimestamp(socket)?.getTime() || 0);
+      });
+      return json({connected:sockets.length>0,last_seen:Math.max(0,...lastSeen)});
+    }
 
     if (url.pathname === "/ws") {
       const agentId = request.headers.get("x-agent-id") || "default";
       const pair = new WebSocketPair();
       const [client, server] = Object.values(pair);
 
-      server.serializeAttachment({ agent_id: agentId });
+      const optimized = request.headers.get('x-firetrace-protocol') === '2';
+      server.serializeAttachment({ agent_id: agentId, optimized, last_seen: nowMs() });
       this.ctx.acceptWebSocket(server);
 
       await this.setConnected(agentId, true, { transport: "wss" });
       this.ctx.waitUntil(this.flushPending(server, agentId));
+      if(optimized) server.send(JSON.stringify({type:'capabilities',heartbeat:'hibernation-heartbeat',interval_seconds:30}));
 
       return new Response(null, { status: 101, webSocket: client });
     }
 
     if (url.pathname === "/command" && request.method === "POST") {
       const command = await request.json();
-      const sockets = this.ctx.getWebSockets();
+      const sockets = this.liveSockets();
       if (!sockets.length) {
         return json({ connected: false });
       }
 
+      const claimed = await this.env.DB.prepare(
+        "UPDATE commands SET status = 'sent', sent_at = ? WHERE id = ? AND status IN ('pending','dispatching')"
+      ).bind(nowMs(), command.id).run();
+      if(!claimed.meta.changes) return json({connected:true,sockets:sockets.length,already_dispatched:true});
       for (const socket of sockets) {
         socket.send(JSON.stringify({ type: "command", command }));
       }
-
-      await this.env.DB.prepare(
-        "UPDATE commands SET status = 'sent', sent_at = ? WHERE id = ?"
-      ).bind(nowMs(), command.id).run();
 
       return json({ connected: true, sockets: sockets.length });
     }
@@ -650,6 +680,10 @@ export class ControlSession extends DurableObject {
     ).bind(agentId).all();
 
     for (const row of rows.results) {
+      const claimed = await this.env.DB.prepare(
+        "UPDATE commands SET status = 'sent', sent_at = ? WHERE id = ? AND status = 'pending'"
+      ).bind(nowMs(), row.id).run();
+      if(!claimed.meta.changes) continue;
       socket.send(JSON.stringify({
         type: "command",
         command: {
@@ -658,15 +692,13 @@ export class ControlSession extends DurableObject {
           args: JSON.parse(row.args_json || "{}"),
         },
       }));
-      await this.env.DB.prepare(
-        "UPDATE commands SET status = 'sent', sent_at = ? WHERE id = ?"
-      ).bind(nowMs(), row.id).run();
     }
   }
 
   async webSocketMessage(ws, message) {
     const attachment = ws.deserializeAttachment() || {};
     const agentId = attachment.agent_id || "default";
+    ws.serializeAttachment({...attachment, last_seen:nowMs()});
 
     if (typeof message !== "string") {
       await this.handleBinary(agentId, message);
@@ -679,8 +711,6 @@ export class ControlSession extends DurableObject {
     } catch {
       return;
     }
-
-    await this.touch(agentId);
 
     if (data.type === "hello") {
       await this.setConnected(agentId, true, data);
@@ -697,7 +727,7 @@ export class ControlSession extends DurableObject {
     if (data.type === "started") {
       const id = String(data.id || "");
       await this.env.DB.prepare(
-        "UPDATE commands SET status = 'running', started_at = ? WHERE id = ?"
+        "UPDATE commands SET status = 'running', started_at = ? WHERE id = ? AND status IN ('pending', 'sent')"
       ).bind(data.started_at ?? Date.now() / 1000, id).run();
       await this.addEvent(agentId, "started", id, data);
       return;
@@ -723,6 +753,7 @@ export class ControlSession extends DurableObject {
     }
 
     if (data.type === "event") {
+      await this.touch(agentId);
       await this.addEvent(agentId, String(data.event || "event"), data.command_id || null, data.payload || {});
     }
   }
